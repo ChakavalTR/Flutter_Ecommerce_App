@@ -10,6 +10,7 @@ class ProductModel {
   final String brand;
   final int stock;
   final double rating;
+  final bool isFlashSale;
 
   ProductModel({
     required this.id,
@@ -23,6 +24,7 @@ class ProductModel {
     required this.brand,
     required this.stock,
     required this.rating,
+    this.isFlashSale = false,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -42,6 +44,7 @@ class ProductModel {
       brand: json['brand'] ?? 'Unknown',
       stock: json['stock'] ?? 0,
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
+      isFlashSale: json['is_flash_sale'] ?? false,
     );
   }
 }

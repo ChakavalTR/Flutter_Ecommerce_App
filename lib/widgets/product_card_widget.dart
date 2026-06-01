@@ -11,6 +11,7 @@ class ProductCardWidget extends StatelessWidget {
   final bool isFlashSaleActive;
   final double? rating;
   final VoidCallback? onTap;
+  final bool isFlashSale;
 
   const ProductCardWidget({
     super.key,
@@ -22,6 +23,7 @@ class ProductCardWidget extends StatelessWidget {
     this.isFlashSaleActive = true,
     this.rating,
     this.onTap,
+    this.isFlashSale = false,
   });
 
   @override
@@ -120,7 +122,7 @@ class ProductCardWidget extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      if (isFlashSaleActive && oldPrice != null)
+                      if (isFlashSale && isFlashSaleActive && oldPrice != null)
                         Text(
                           '\$${oldPrice!.toStringAsFixed(0)}',
                           style: const TextStyle(
@@ -156,7 +158,10 @@ class ProductCardWidget extends StatelessWidget {
               ],
             ),
           ),
-          if (isFlashSaleActive && discount != null && discount! > 0)
+          if (isFlashSale &&
+              isFlashSaleActive &&
+              discount != null &&
+              discount! > 0)
             Positioned(
               right: 0,
               child: Container(

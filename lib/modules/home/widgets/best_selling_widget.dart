@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce_app/config/routes/app_pages.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
 import 'package:flutter_ecommerce_app/modules/home/controller/home_controller.dart';
 import 'package:flutter_ecommerce_app/widgets/product_card_widget.dart';
@@ -53,6 +54,9 @@ class BestSellingWidget extends GetView<HomeController> {
                   price: product.price,
                   image: product.image,
                   rating: product.rating,
+                  onTap: () {
+                    RouteView.detail.go(arguments: product);
+                  },
                 ),
               );
             },

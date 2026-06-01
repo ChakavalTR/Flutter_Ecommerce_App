@@ -6,6 +6,7 @@ import 'package:flutter_ecommerce_app/modules/category/view/category_view.dart';
 import 'package:flutter_ecommerce_app/modules/favorite/view/favorite_view.dart';
 import 'package:flutter_ecommerce_app/modules/home/widgets/banner_widget.dart';
 import 'package:flutter_ecommerce_app/modules/home/widgets/best_selling_widget.dart';
+import 'package:flutter_ecommerce_app/modules/home/widgets/bottom_navigation_bar.widget.dart';
 import 'package:flutter_ecommerce_app/modules/home/widgets/categories_widget.dart';
 import 'package:flutter_ecommerce_app/modules/home/widgets/flash_sale_widget.dart';
 import 'package:flutter_ecommerce_app/modules/home/widgets/title_widget.dart';
@@ -36,7 +37,7 @@ class HomeView extends GetView<HomeController> {
         return Scaffold(
           appBar: currentIndex == 0 ? _buildAppbar : null,
           body: currentView,
-          bottomNavigationBar: _buildBottomNavigationBar,
+          bottomNavigationBar: BottomNavigationBarWidget(),
         );
       }),
     );
@@ -79,7 +80,9 @@ class HomeView extends GetView<HomeController> {
                   icon: Icon(Icons.search_outlined),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(() => CartView());
+                  },
                   icon: Icon(Icons.shopping_cart_outlined),
                 ),
               ],
@@ -123,62 +126,5 @@ class HomeView extends GetView<HomeController> {
         BestSellingWidget(),
       ],
     );
-  }
-
-  //! Build Bottom Navigation Bar
-  Obx get _buildBottomNavigationBar {
-    return Obx(() {
-      final currentIndex = controller.currentIndex.value;
-      return SizedBox(
-        height: 93,
-        child: BottomNavigationBar(
-          currentIndex: currentIndex,
-          onTap: controller.changeBottomNav,
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: AppTheme.primary,
-          unselectedItemColor: AppTheme.greyText,
-          selectedLabelStyle: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-          ),
-          unselectedLabelStyle: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.normal,
-          ),
-          items: [
-            BottomNavigationBarItem(
-              icon: currentIndex == 0
-                  ? Icon(Icons.home, size: 28)
-                  : Icon(Icons.home_outlined, size: 28),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: currentIndex == 1
-                  ? Icon(Icons.category, size: 28)
-                  : Icon(Icons.category_outlined, size: 28),
-              label: 'Category',
-            ),
-            BottomNavigationBarItem(
-              icon: currentIndex == 2
-                  ? Icon(Icons.favorite, size: 28)
-                  : Icon(Icons.favorite_border, size: 28),
-              label: 'Favorites',
-            ),
-            BottomNavigationBarItem(
-              icon: currentIndex == 3
-                  ? Icon(Icons.shopping_cart, size: 28)
-                  : Icon(Icons.shopping_cart_outlined, size: 28),
-              label: 'Cart',
-            ),
-            BottomNavigationBarItem(
-              icon: currentIndex == 4
-                  ? Icon(Icons.person, size: 28)
-                  : Icon(Icons.person_outline, size: 28),
-              label: 'Profile',
-            ),
-          ],
-        ),
-      );
-    });
   }
 }

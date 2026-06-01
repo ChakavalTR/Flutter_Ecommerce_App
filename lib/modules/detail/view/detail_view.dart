@@ -1,21 +1,313 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
+import 'package:flutter_ecommerce_app/modules/cart/view/cart_view.dart';
+import 'package:flutter_ecommerce_app/modules/detail/view/image_preview_view.dart';
+import 'package:flutter_ecommerce_app/modules/detail/widgets/bottomNavigation_bar_widget.dart';
+import 'package:flutter_ecommerce_app/modules/detail/widgets/color_option_widget.dart';
+import 'package:flutter_ecommerce_app/modules/detail/widgets/storage_option_widget.dart';
 import 'package:get/get.dart';
 import 'package:flutter_ecommerce_app/modules/detail/controller/detail_controller.dart';
 
 class DetailView extends GetView<DetailController> {
   const DetailView({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: _buildAppbar);
+    return Scaffold(
+      body: SafeArea(top: true, child: _buildBody),
+      bottomNavigationBar: const BottomnavigationBarWidget(),
+    );
   }
 
-  //! Build AppBar
-  AppBar get _buildAppbar {
-    return AppBar(
-      title: Text(controller.product.title),
-      actions: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.favorite_border)),
+  //! Build Body Using CustomScrollView
+  CustomScrollView get _buildBody {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          backgroundColor: Colors.white,
+          leading: BackButton(),
+          expandedHeight: 350,
+          pinned: true,
+          actions: [
+            IconButton(
+              onPressed: () {
+                Get.to(() => CartView());
+              },
+              icon: Icon(
+                Icons.shopping_cart_outlined,
+                color: Colors.black,
+                size: 28,
+              ),
+            ),
+            SizedBox(width: 10),
+          ],
+          flexibleSpace: FlexibleSpaceBar(
+            background: GestureDetector(
+              onTap: () {
+                Get.to(
+                  () => ImagePreviewView(imageUrl: controller.product.image),
+                );
+              },
+              child: Hero(
+                tag: controller.product.image,
+                child: CachedNetworkImage(
+                  imageUrl: controller.product.image,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16, right: 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 6,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      controller.product.title,
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Spacer(),
+                    Obx(() {
+                      return IconButton(
+                        onPressed: () {
+                          controller.toggleFavoriteStatus();
+                        },
+                        icon: Icon(
+                          controller.toggleFavorite.value
+                              ? (Icons.favorite)
+                              : Icons.favorite_border,
+                          color: controller.toggleFavorite.value
+                              ? Colors.red
+                              : Colors.black,
+                          size: 28,
+                        ),
+                      );
+                    }),
+                  ],
+                ),
+                Row(
+                  children: [
+                    ...List.generate(5, (index) {
+                      if (index < controller.product.rating.floor()) {
+                        return Icon(Icons.star, color: Colors.amber, size: 18);
+                      } else if (index < controller.product.rating) {
+                        return Icon(
+                          Icons.star_half,
+                          color: Colors.amber,
+                          size: 18,
+                        );
+                      } else {
+                        return Icon(
+                          Icons.star_border,
+                          color: Colors.amber,
+                          size: 18,
+                        );
+                      }
+                    }),
+                    SizedBox(width: 6),
+                    Text(
+                      controller.product.rating.toStringAsFixed(1),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '(reviews)',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                Builder(
+                  builder: (context) {
+                    final hasDiscount =
+                        controller.product.isFlashSale &&
+                        controller.product.discount != null &&
+                        controller.product.newPrice != null;
+                    if (hasDiscount) {
+                      return Row(
+                        children: [
+                          Text(
+                            '\$${controller.product.price.toStringAsFixed(0)}',
+                            style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.success,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            '\$${controller.product.newPrice!.toStringAsFixed(0)}',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.grey,
+                              decoration: TextDecoration.lineThrough,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppTheme.danger,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              '-${controller.product.discount!.toStringAsFixed(0)}%',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    return Text(
+                      '\$${controller.product.price.toStringAsFixed(0)}',
+                      style: TextStyle(
+                        fontSize: 26,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.success,
+                      ),
+                    );
+                  },
+                ),
+                Text(
+                  'Color',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey[800],
+                  ),
+                ),
+                SizedBox(height: 1),
+                Obx(() {
+                  return Row(
+                    children: List.generate(controller.colorsOption.length, (
+                      index,
+                    ) {
+                      return GestureDetector(
+                        onTap: () {
+                          controller.changeColor(index);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 10, left: 5),
+                          child: ColorOptionWidget(
+                            color: controller.colorsOption[index],
+                            isSelected:
+                                controller.selectedColors.value == index,
+                          ),
+                        ),
+                      );
+                    }),
+                  );
+                }),
+                SizedBox(height: 5),
+                Container(
+                  width: double.infinity,
+                  height: 1,
+                  color: Colors.grey[300],
+                ),
+                if (controller.showStorage) ...[
+                  Text(
+                    'Storage',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[800],
+                    ),
+                  ),
+                  SizedBox(height: 1),
+                  Obx(() {
+                    return Row(
+                      children: List.generate(
+                        controller.storagesOption.length,
+                        (index) {
+                          return GestureDetector(
+                            onTap: () {
+                              controller.changeStorage(index);
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                right: 10,
+                                left: 5,
+                              ),
+                              child: StorageOptionWidget(
+                                storage: controller.storagesOption[index],
+                                isSelected:
+                                    controller.selectedStorage.value == index,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }),
+                ],
+                SizedBox(height: 10),
+                Obx(() {
+                  final isLongDescription =
+                      controller.product.description.length > 100;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Description',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[800],
+                        ),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        controller.product.description,
+                        maxLines: controller.isExpanded.value ? null : 2,
+                        overflow: controller.isExpanded.value
+                            ? TextOverflow.visible
+                            : TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 16, color: Colors.grey[800]),
+                      ),
+                      if (isLongDescription)
+                        GestureDetector(
+                          onTap: () {
+                            controller.toggleDescription();
+                          },
+                          child: Text(
+                            controller.isExpanded.value
+                                ? 'Show Less'
+                                : 'Show More',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }

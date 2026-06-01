@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/config/routes/app_pages.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
+import 'package:flutter_ecommerce_app/data/models/product_model.dart';
 import 'package:flutter_ecommerce_app/modules/home/controller/home_controller.dart';
 import 'package:flutter_ecommerce_app/widgets/product_card_widget.dart';
 import 'package:get/get.dart';
@@ -82,8 +83,24 @@ class FlashSaleWidget extends GetView<HomeController> {
                     discount: product.discount,
                     image: product.image,
                     isFlashSaleActive: !controller.isFlashSaleEnded.value,
+                    isFlashSale: true,
                     onTap: () {
-                      RouteView.detail.go(arguments: product);
+                      RouteView.detail.go(
+                        arguments: ProductModel(
+                          id: product.id,
+                          title: product.title,
+                          price: product.price,
+                          discount: product.discount,
+                          newPrice: product.newPrice,
+                          description: product.description,
+                          image: product.image,
+                          category: product.category,
+                          brand: product.brand,
+                          stock: product.stock,
+                          rating: product.rating,
+                          isFlashSale: true,
+                        ),
+                      );
                     },
                   ),
                 );
