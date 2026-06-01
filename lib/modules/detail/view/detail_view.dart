@@ -39,7 +39,90 @@ class DetailView extends GetView<DetailController> {
                 size: 28,
               ),
             ),
-            SizedBox(width: 10),
+            PopupMenuButton(
+              icon: Icon(Icons.more_vert, color: Colors.black, size: 28),
+              onSelected: (value) {
+                switch (value) {
+                  case 'save':
+                    controller.saveImage(controller.product.image);
+                    break;
+                  case 'share':
+                    Get.snackbar(
+                      'Coming Soon',
+                      'Share product feature is coming soon!',
+                      backgroundColor: AppTheme.primary,
+                      colorText: Colors.white,
+                      snackPosition: SnackPosition.BOTTOM,
+                    );
+                    break;
+                  case 'report':
+                    Get.snackbar(
+                      'Coming Soon',
+                      'Report product feature is coming soon!',
+                      backgroundColor: AppTheme.primary,
+                      colorText: Colors.white,
+                      snackPosition: SnackPosition.BOTTOM,
+                    );
+                    break;
+                }
+              },
+              itemBuilder: (context) {
+                return [
+                  PopupMenuItem(
+                    value: 'save',
+                    child: Row(
+                      children: [
+                        Icon(Icons.save_outlined),
+                        SizedBox(width: 8),
+                        Text(
+                          'Save Image',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 'share',
+                    child: Row(
+                      children: [
+                        Icon(Icons.share_outlined),
+                        SizedBox(width: 8),
+                        Text(
+                          'Share Product',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 'report',
+                    child: Row(
+                      children: [
+                        Icon(Icons.report_outlined),
+                        SizedBox(width: 8),
+                        Text(
+                          'Report Product',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ];
+              },
+            ),
+            SizedBox(width: 5),
           ],
           flexibleSpace: FlexibleSpaceBar(
             background: GestureDetector(
