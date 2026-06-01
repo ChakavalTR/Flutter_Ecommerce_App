@@ -11,6 +11,7 @@ class ProductModel {
   final int stock;
   final double rating;
   final bool isFlashSale;
+  final List<String> images;
 
   ProductModel({
     required this.id,
@@ -25,6 +26,7 @@ class ProductModel {
     required this.stock,
     required this.rating,
     this.isFlashSale = false,
+    required this.images,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -45,6 +47,9 @@ class ProductModel {
       stock: json['stock'] ?? 0,
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
       isFlashSale: json['is_flash_sale'] ?? false,
+      images: json['images'] == null
+          ? [json['image']]
+          : List<String>.from(json['images']),
     );
   }
 }

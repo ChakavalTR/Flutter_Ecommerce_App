@@ -8,6 +8,7 @@ import 'package:flutter_ecommerce_app/modules/detail/widgets/color_option_widget
 import 'package:flutter_ecommerce_app/modules/detail/widgets/storage_option_widget.dart';
 import 'package:get/get.dart';
 import 'package:flutter_ecommerce_app/modules/detail/controller/detail_controller.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class DetailView extends GetView<DetailController> {
   const DetailView({super.key});
@@ -125,19 +126,67 @@ class DetailView extends GetView<DetailController> {
             SizedBox(width: 5),
           ],
           flexibleSpace: FlexibleSpaceBar(
-            background: GestureDetector(
-              onTap: () {
-                Get.to(
-                  () => ImagePreviewView(imageUrl: controller.product.image),
-                );
-              },
-              child: Hero(
-                tag: controller.product.image,
-                child: CachedNetworkImage(
-                  imageUrl: controller.product.image,
-                  fit: BoxFit.cover,
+            background: Stack(
+              children: [
+                PageView.builder(
+                  onPageChanged: controller.changeImageIndex,
+                  itemCount: controller.productImages.length,
+                  itemBuilder: (context, index) {
+                    final image = controller.productImages[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Get.to(() => ImagePreviewView(initialIndex: index));
+                      },
+                      child: Hero(
+                        tag: '${image}_$index',
+                        child: CachedNetworkImage(
+                          imageUrl: image,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  },
                 ),
-              ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Obx(() {
+                    return AnimatedSmoothIndicator(
+                      activeIndex: controller.currentImageIndex.value,
+                      count: controller.productImages.length,
+                      effect: ExpandingDotsEffect(
+                        dotHeight: 8,
+                        dotWidth: 8,
+                        activeDotColor: AppTheme.primary,
+                        dotColor: AppTheme.darkBg.withOpacity(0.3),
+                      ),
+                    );
+                  }),
+                ),
+                Positioned(
+                  right: 28,
+                  bottom: 20,
+                  child: Obx(() {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[700]?.withOpacity(0.4),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        '${controller.currentImageIndex.value + 1}/${controller.productImages.length}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+              ],
             ),
           ),
         ),

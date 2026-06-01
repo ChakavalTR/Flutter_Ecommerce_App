@@ -99,6 +99,7 @@ class FlashSaleWidget extends GetView<HomeController> {
                           stock: product.stock,
                           rating: product.rating,
                           isFlashSale: true,
+                          images: product.images,
                         ),
                       );
                     },

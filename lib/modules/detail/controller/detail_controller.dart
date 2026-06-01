@@ -22,6 +22,7 @@ class DetailController extends GetxController {
   final quantity = 1.obs;
   var toggleFavorite = false.obs;
   var isLoading = false.obs;
+  final currentImageIndex = 0.obs;
   //-------------------------------------------
   //* Lifecycle Section *\\
   @override
@@ -144,5 +145,14 @@ class DetailController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  //! Current Image Index Change
+  List<String> get productImages {
+    return product.images.isNotEmpty ? product.images : [product.image];
+  }
+
+  void changeImageIndex(int index) {
+    currentImageIndex.value = index;
   }
 }
