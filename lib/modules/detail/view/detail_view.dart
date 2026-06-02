@@ -26,102 +26,132 @@ class DetailView extends GetView<DetailController> {
       slivers: [
         SliverAppBar(
           backgroundColor: Colors.white,
-          leading: BackButton(),
+          leadingWidth: 60,
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[700]?.withOpacity(0.3),
+                shape: BoxShape.circle,
+              ),
+              child: IconButton(
+                onPressed: () => Get.back(),
+                icon: const Icon(
+                  Icons.arrow_back_ios_new,
+                  color: Colors.white,
+                  size: 26,
+                ),
+              ),
+            ),
+          ),
           expandedHeight: 350,
           pinned: true,
           actions: [
-            IconButton(
-              onPressed: () {
-                Get.to(() => CartView());
-              },
-              icon: Icon(
-                Icons.shopping_cart_outlined,
-                color: Colors.black,
-                size: 28,
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[700]?.withOpacity(0.3),
+                shape: BoxShape.circle,
+              ),
+              child: IconButton(
+                onPressed: () {
+                  Get.to(() => CartView());
+                },
+                icon: const Icon(
+                  Icons.shopping_cart_outlined,
+                  color: Colors.white,
+                  size: 26,
+                ),
               ),
             ),
-            PopupMenuButton(
-              icon: Icon(Icons.more_vert, color: Colors.black, size: 28),
-              onSelected: (value) {
-                switch (value) {
-                  case 'save':
-                    controller.saveImage(controller.product.image);
-                    break;
-                  case 'share':
-                    Get.snackbar(
-                      'Coming Soon',
-                      'Share product feature is coming soon!',
-                      backgroundColor: AppTheme.primary,
-                      colorText: Colors.white,
-                      snackPosition: SnackPosition.BOTTOM,
-                    );
-                    break;
-                  case 'report':
-                    Get.snackbar(
-                      'Coming Soon',
-                      'Report product feature is coming soon!',
-                      backgroundColor: AppTheme.primary,
-                      colorText: Colors.white,
-                      snackPosition: SnackPosition.BOTTOM,
-                    );
-                    break;
-                }
-              },
-              itemBuilder: (context) {
-                return [
-                  PopupMenuItem(
-                    value: 'save',
-                    child: Row(
-                      children: [
-                        Icon(Icons.save_outlined),
-                        SizedBox(width: 8),
-                        Text(
-                          'Save Image',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
+            SizedBox(width: 5),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[700]?.withOpacity(0.3),
+                shape: BoxShape.circle,
+              ),
+              child: PopupMenuButton(
+                icon: Icon(Icons.more_vert, color: Colors.white, size: 26),
+                onSelected: (value) {
+                  switch (value) {
+                    case 'save':
+                      controller.saveImage(controller.product.image);
+                      break;
+                    case 'share':
+                      Get.snackbar(
+                        'Coming Soon',
+                        'Share product feature is coming soon!',
+                        backgroundColor: AppTheme.primary,
+                        colorText: Colors.white,
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
+                      break;
+                    case 'report':
+                      Get.snackbar(
+                        'Coming Soon',
+                        'Report product feature is coming soon!',
+                        backgroundColor: AppTheme.primary,
+                        colorText: Colors.white,
+                        snackPosition: SnackPosition.BOTTOM,
+                      );
+                      break;
+                  }
+                },
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem(
+                      value: 'save',
+                      child: Row(
+                        children: [
+                          Icon(Icons.save_outlined),
+                          SizedBox(width: 8),
+                          Text(
+                            'Save Image',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  PopupMenuItem(
-                    value: 'share',
-                    child: Row(
-                      children: [
-                        Icon(Icons.share_outlined),
-                        SizedBox(width: 8),
-                        Text(
-                          'Share Product',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
+                    PopupMenuItem(
+                      value: 'share',
+                      child: Row(
+                        children: [
+                          Icon(Icons.share_outlined),
+                          SizedBox(width: 8),
+                          Text(
+                            'Share Product',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  PopupMenuItem(
-                    value: 'report',
-                    child: Row(
-                      children: [
-                        Icon(Icons.report_outlined),
-                        SizedBox(width: 8),
-                        Text(
-                          'Report Product',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
+                    PopupMenuItem(
+                      value: 'report',
+                      child: Row(
+                        children: [
+                          Icon(Icons.report_outlined),
+                          SizedBox(width: 8),
+                          Text(
+                            'Report Product',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ];
-              },
+                  ];
+                },
+              ),
             ),
             SizedBox(width: 5),
           ],
@@ -199,11 +229,13 @@ class DetailView extends GetView<DetailController> {
               children: [
                 Row(
                   children: [
-                    Text(
-                      controller.product.title,
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Text(
+                        controller.product.title,
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     Spacer(),

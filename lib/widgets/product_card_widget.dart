@@ -33,8 +33,8 @@ class ProductCardWidget extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-            width: 170,
-            height: 175,
+            width: 175,
+            height: 180,
             decoration: BoxDecoration(
               color: AppTheme.lightBg,
               borderRadius: BorderRadius.circular(15),
@@ -62,7 +62,7 @@ class ProductCardWidget extends StatelessWidget {
                   clipBehavior: Clip.antiAlias,
                   child: CachedNetworkImage(
                     imageUrl: image,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                     placeholder: (context, url) {
                       return Container(
                         decoration: BoxDecoration(

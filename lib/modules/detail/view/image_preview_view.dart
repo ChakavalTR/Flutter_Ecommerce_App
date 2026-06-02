@@ -39,9 +39,15 @@ class ImagePreviewView extends GetView<DetailController> {
             Positioned(
               top: 75,
               left: 10,
-              child: IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: Icon(Icons.close, color: Colors.white, size: 30),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[700]?.withOpacity(0.3),
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  onPressed: () => Navigator.pop(context),
+                  icon: Icon(Icons.close, color: Colors.white, size: 30),
+                ),
               ),
             ),
             Positioned(
