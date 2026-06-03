@@ -40,6 +40,13 @@ class DetailView extends GetView<DetailController> {
                   Icons.arrow_back_ios_new,
                   color: Colors.white,
                   size: 26,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black45,
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -48,6 +55,8 @@ class DetailView extends GetView<DetailController> {
           pinned: true,
           actions: [
             Container(
+              width: 45,
+              height: 45,
               decoration: BoxDecoration(
                 color: Colors.grey[700]?.withOpacity(0.3),
                 shape: BoxShape.circle,
@@ -60,17 +69,37 @@ class DetailView extends GetView<DetailController> {
                   Icons.shopping_cart_outlined,
                   color: Colors.white,
                   size: 26,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black45,
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
                 ),
               ),
             ),
             SizedBox(width: 5),
             Container(
+              width: 45,
+              height: 45,
               decoration: BoxDecoration(
                 color: Colors.grey[700]?.withOpacity(0.3),
                 shape: BoxShape.circle,
               ),
               child: PopupMenuButton(
-                icon: Icon(Icons.more_vert, color: Colors.white, size: 26),
+                icon: Icon(
+                  Icons.more_vert,
+                  color: Colors.white,
+                  size: 26,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black45,
+                      blurRadius: 4,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
                 onSelected: (value) {
                   switch (value) {
                     case 'save':
