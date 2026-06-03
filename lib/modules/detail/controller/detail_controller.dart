@@ -77,40 +77,36 @@ class DetailController extends GetxController {
   Future<void> saveImage(String imageUrl) async {
     try {
       isLoading.value = true;
-      Get.dialog(
-        Center(
-          child: Material(
-            color: Colors.transparent,
-            child: Container(
-              width: 200,
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: AppTheme.lightBg,
-                borderRadius: BorderRadius.circular(20),
-              ),
+      Get.generalDialog(
+        barrierDismissible: false,
+        barrierColor: Colors.black.withOpacity(0.6),
+        // Paramater not using --- IGNORE ---
+        pageBuilder: (_, __, ___) {
+          return Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Lottie.asset(
                     'assets/lotties/Sandy Loading.json',
-                    width: 150,
-                    height: 150,
+                    width: 200,
+                    height: 200,
                   ),
-                  SizedBox(height: 16),
-                  Text(
-                    "Loading Saving...",
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Saving Image...',
                     style: TextStyle(
-                      color: AppTheme.darkText,
+                      color: Colors.white,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      fontSize: 18,
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ),
-        barrierDismissible: false,
+          );
+        },
       );
       final response = await Dio().get(
         imageUrl,

@@ -4,12 +4,18 @@ import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
 import 'package:flutter_ecommerce_app/modules/cart/view/cart_view.dart';
 import 'package:flutter_ecommerce_app/modules/category/view/category_view.dart';
 import 'package:flutter_ecommerce_app/modules/favorite/view/favorite_view.dart';
+import 'package:flutter_ecommerce_app/modules/home/widgets/accessories_category_widget.dart';
+import 'package:flutter_ecommerce_app/modules/home/widgets/audio_category_widget.dart';
 import 'package:flutter_ecommerce_app/modules/home/widgets/banner_widget.dart';
 import 'package:flutter_ecommerce_app/modules/home/widgets/best_selling_widget.dart';
 import 'package:flutter_ecommerce_app/modules/home/widgets/bottom_navigation_bar.widget.dart';
 import 'package:flutter_ecommerce_app/modules/home/widgets/categories_widget.dart';
 import 'package:flutter_ecommerce_app/modules/home/widgets/flash_sale_widget.dart';
+import 'package:flutter_ecommerce_app/modules/home/widgets/gaming_category_widget.dart';
+import 'package:flutter_ecommerce_app/modules/home/widgets/laptops_category_widget.dart';
+import 'package:flutter_ecommerce_app/modules/home/widgets/phones_category_widget.dart';
 import 'package:flutter_ecommerce_app/modules/home/widgets/title_widget.dart';
+import 'package:flutter_ecommerce_app/modules/home/widgets/watches_category_widget.dart';
 import 'package:flutter_ecommerce_app/modules/profile/view/profile_view.dart';
 import 'package:get/get.dart';
 import '../controller/home_controller.dart';
@@ -124,6 +130,18 @@ class HomeView extends GetView<HomeController> {
         FlashSaleWidget(),
         TitleWidget(title: 'Best Selling 🔥', onTap: () {}),
         BestSellingWidget(),
+        TitleWidget(title: 'Phones 📱', onTap: () {}),
+        PhoneCategoryWidget(),
+        TitleWidget(title: 'Laptops 💻', onTap: () {}),
+        LaptopCategoryWidget(),
+        TitleWidget(title: 'Watches ⌚', onTap: () {}),
+        WatchCategoryWidget(),
+        TitleWidget(title: 'Audio 🎧', onTap: () {}),
+        AudioCategoryWidget(),
+        TitleWidget(title: 'Accessories 🎒', onTap: () {}),
+        AccessoriesCategoryWidget(),
+        TitleWidget(title: 'Gaming 🎮', onTap: () {}),
+        GamingCategoryWidget(),
       ],
     );
   }

@@ -23,8 +23,10 @@ class HomeController extends GetxController {
     {'icon': Icons.grid_view_rounded, 'label': 'All'},
     {'icon': Icons.phone_android_rounded, 'label': 'Phones'},
     {'icon': Icons.laptop_mac_rounded, 'label': 'Laptops'},
-    {'icon': Icons.headphones, 'label': 'Headphones'},
     {'icon': Icons.watch_rounded, 'label': 'Watches'},
+    {'icon': Icons.headphones, 'label': 'Audio'},
+    {'icon': Icons.cable_rounded, 'label': 'Accessories'},
+    {'icon': Icons.videogame_asset, 'label': 'Gaming'},
   ];
   var flashSaleDuration = Duration.zero.obs;
   Timer? timerFlashSale;
@@ -32,14 +34,15 @@ class HomeController extends GetxController {
   var products = <ProductModel>[].obs;
   var isLoading = false.obs;
   var currentIndex = 0.obs;
+  final RxList<ProductModel> flashSaleProducts = <ProductModel>[].obs;
   //-------------------------------------------
   //* Lifecycle Section *\\
   @override
   void onInit() {
     super.onInit();
-    fetchProducts();
     bannerController = PageController(initialPage: pageIndex);
     currentBanner.value = pageIndex % bannerImages.length;
+    fetchProducts();
     startFlashSaleCountdown();
     autoScrollBanner();
   }
@@ -62,6 +65,7 @@ class HomeController extends GetxController {
 
   //! Auto Scroll Banner
   void autoScrollBanner() {
+    timerBanner?.cancel();
     timerBanner = Timer.periodic(Duration(seconds: 4), (timer) {
       pageIndex++;
       if (!bannerController.hasClients) return;
@@ -130,9 +134,37 @@ class HomeController extends GetxController {
     currentIndex.value = index;
   }
 
+  //! Flash Countdown reset (for testing)
+  // Future<void> resetFlashSaleCountdown() async {
+  //   final key = 'flash_sale_end_time';
+  //   await LocalServiceStorage.instance.remove(key);
+  //   flashSaleDuration.value = Duration.zero;
+  //   isFlashSaleEnded.value = true;
+  //   await startFlashSaleCountdown();
+  // }
+
+  //-------------------------------------------
+  //* Sale By Category Section *\\
   //! Flash Sale Products
-  List<ProductModel> get flashSaleProducts {
-    return products.where((product) => product.discount! > 0).take(8).toList();
+  void loadFlashSaleProducts() {
+    List<ProductModel> getRandomProducts(String category, int count) {
+      final items = products
+          .where(
+            (p) =>
+                p.category.toLowerCase() == category.toLowerCase() &&
+                (p.discount ?? 0) > 0,
+          )
+          .take(count)
+          .toList();
+      return items.take(count).toList();
+    }
+
+    flashSaleProducts.assignAll([
+      ...getRandomProducts('Watches', 2),
+      ...getRandomProducts('Accessories', 4),
+      ...getRandomProducts('Laptops', 1),
+      ...getRandomProducts('Audio', 2),
+    ]);
   }
 
   //! Best Selling Products
@@ -142,14 +174,47 @@ class HomeController extends GetxController {
     return list.take(5).toList();
   }
 
-  // //! Flash Countdown reset (for testing)
-  // Future<void> resetFlashSaleCountdown() async {
-  //   final key = 'flash_sale_end_time';
-  //   await LocalServiceStorage.instance.remove(key);
-  //   flashSaleDuration.value = Duration.zero;
-  //   isFlashSaleEnded.value = true;
-  //   await startFlashSaleCountdown();
-  // }
+  //! Phones Category Products
+  List<ProductModel> get phoneCategoryProducts {
+    return products
+        .where((product) => product.category.toLowerCase() == 'phones')
+        .toList();
+  }
+
+  //! Laptops Category Products
+  List<ProductModel> get laptopCategoryProducts {
+    return products
+        .where((product) => product.category.toLowerCase() == 'laptops')
+        .toList();
+  }
+
+  //! Watches Category Products
+  List<ProductModel> get watchCategoryProducts {
+    return products
+        .where((product) => product.category.toLowerCase() == 'watches')
+        .toList();
+  }
+
+  //! Audio Category Products
+  List<ProductModel> get audioCategoryProducts {
+    return products
+        .where((product) => product.category.toLowerCase() == 'audio')
+        .toList();
+  }
+
+  //! Accessories Category Products
+  List<ProductModel> get accessoriesCategoryProducts {
+    return products
+        .where((product) => product.category.toLowerCase() == 'accessories')
+        .toList();
+  }
+
+  //! Gaming Category Products
+  List<ProductModel> get gamingCategoryProducts {
+    return products
+        .where((product) => product.category.toLowerCase() == 'gaming')
+        .toList();
+  }
 
   //-------------------------------------------
   //* API Section *\\
@@ -161,6 +226,7 @@ class HomeController extends GetxController {
       final response = await ApiService.get('/api/products');
       final List data = response.data;
       products.value = data.map((json) => ProductModel.fromJson(json)).toList();
+      loadFlashSaleProducts();
     } catch (e) {
       print('Error fetching products: $e');
     } finally {

@@ -13,7 +13,7 @@ class BannerWidget extends GetView<HomeController> {
     return Column(
       children: [
         SizedBox(
-          height: 180,
+          height: 190,
           child: PageView.builder(
             controller: controller.bannerController,
             onPageChanged: controller.changeBanner,

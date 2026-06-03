@@ -78,8 +78,8 @@ class FlashSaleWidget extends GetView<HomeController> {
                   padding: const EdgeInsets.only(right: 16),
                   child: ProductCardWidget(
                     title: product.title,
-                    price: product.price,
-                    oldPrice: product.newPrice,
+                    price: product.newPrice ?? product.price,
+                    oldPrice: product.price,
                     discount: product.discount,
                     image: product.image,
                     isFlashSaleActive: !controller.isFlashSaleEnded.value,
@@ -89,9 +89,9 @@ class FlashSaleWidget extends GetView<HomeController> {
                         arguments: ProductModel(
                           id: product.id,
                           title: product.title,
-                          price: product.price,
+                          price: product.newPrice ?? product.price,
                           discount: product.discount,
-                          newPrice: product.newPrice,
+                          newPrice: product.price,
                           description: product.description,
                           image: product.image,
                           category: product.category,
