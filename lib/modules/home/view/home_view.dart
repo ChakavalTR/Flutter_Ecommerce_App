@@ -56,7 +56,7 @@ class HomeView extends GetView<HomeController> {
       actionsPadding: EdgeInsets.only(right: 8),
       titleSpacing: 4,
       title: SizedBox(
-        width: 140,
+        width: 135,
         child: Image.asset('assets/icons/logo_icon.png', fit: BoxFit.fitWidth),
       ),
       actions: [
