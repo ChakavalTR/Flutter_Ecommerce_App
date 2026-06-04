@@ -54,25 +54,10 @@ class HomeView extends GetView<HomeController> {
     return AppBar(
       centerTitle: false,
       actionsPadding: EdgeInsets.only(right: 8),
-      title: RichText(
-        text: TextSpan(
-          text: 'E',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
-            color: AppTheme.primary,
-          ),
-          children: [
-            TextSpan(
-              text: '-Shop',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 24,
-                color: AppTheme.darkBg,
-              ),
-            ),
-          ],
-        ),
+      titleSpacing: 4,
+      title: SizedBox(
+        width: 140,
+        child: Image.asset('assets/icons/logo_icon.png', fit: BoxFit.fitWidth),
       ),
       actions: [
         Stack(
