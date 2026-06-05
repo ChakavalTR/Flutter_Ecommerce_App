@@ -20,7 +20,6 @@ class DetailController extends GetxController {
   ];
   final storagesOption = ['256GB', '512GB', '1TB', '2TB'];
   final quantity = 1.obs;
-  var toggleFavorite = false.obs;
   var isLoading = false.obs;
   final currentImageIndex = 0.obs;
   //-------------------------------------------
@@ -57,11 +56,6 @@ class DetailController extends GetxController {
     if (quantity.value > 1) {
       quantity.value--;
     }
-  }
-
-  //! On Favorite Toggle
-  void toggleFavoriteStatus() {
-    toggleFavorite.toggle();
   }
 
   //! Show Storage Options Modal

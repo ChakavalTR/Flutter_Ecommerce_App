@@ -6,12 +6,14 @@ import 'package:flutter_ecommerce_app/modules/detail/view/image_preview_view.dar
 import 'package:flutter_ecommerce_app/modules/detail/widgets/bottomNavigation_bar_widget.dart';
 import 'package:flutter_ecommerce_app/modules/detail/widgets/color_option_widget.dart';
 import 'package:flutter_ecommerce_app/modules/detail/widgets/storage_option_widget.dart';
+import 'package:flutter_ecommerce_app/modules/favorite/controller/favorite_controller.dart';
 import 'package:get/get.dart';
 import 'package:flutter_ecommerce_app/modules/detail/controller/detail_controller.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class DetailView extends GetView<DetailController> {
-  const DetailView({super.key});
+  DetailView({super.key});
+  final favoriteController = Get.find<FavoriteController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -271,13 +273,18 @@ class DetailView extends GetView<DetailController> {
                     Obx(() {
                       return IconButton(
                         onPressed: () {
-                          controller.toggleFavoriteStatus();
+                          favoriteController.toggleFavoriteStatus(
+                            controller.product.id,
+                          );
                         },
                         icon: Icon(
-                          controller.toggleFavorite.value
+                          favoriteController.isFavorite(controller.product.id)
                               ? (Icons.favorite)
                               : Icons.favorite_border,
-                          color: controller.toggleFavorite.value
+                          color:
+                              favoriteController.isFavorite(
+                                controller.product.id,
+                              )
                               ? Colors.red
                               : Colors.black,
                           size: 28,

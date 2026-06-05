@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/config/routes/app_pages.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
 import 'package:flutter_ecommerce_app/modules/category/controller/category_controller.dart';
+import 'package:flutter_ecommerce_app/modules/favorite/controller/favorite_controller.dart';
 import 'package:flutter_ecommerce_app/widgets/categories_widget.dart';
 import 'package:get/get.dart';
 
 class CategoryView extends GetView<CategoryController> {
-  const CategoryView({super.key});
-
+  CategoryView({super.key});
+  final favoriteController = Get.find<FavoriteController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: _buildAppbar, body: _buildBody);
@@ -17,13 +18,6 @@ class CategoryView extends GetView<CategoryController> {
   //! Build AppBar
   AppBar get _buildAppbar {
     return AppBar(
-      actionsPadding: EdgeInsets.only(right: 8),
-      actions: [
-        IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.shopping_cart_outlined, size: 26),
-        ),
-      ],
       title: Text(
         'Categories',
         style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -221,18 +215,19 @@ class CategoryView extends GetView<CategoryController> {
                                       alignment: Alignment.center,
                                       child: IconButton(
                                         onPressed: () {
-                                          controller.toggleFavoriteStatus(
-                                            product.id,
-                                          );
+                                          favoriteController
+                                              .toggleFavoriteStatus(product.id);
                                         },
                                         icon: Obx(() {
                                           return Icon(
-                                            controller.isFavorite(product.id)
+                                            favoriteController.isFavorite(
+                                                  product.id,
+                                                )
                                                 ? Icons.favorite
                                                 : Icons.favorite_border,
                                             size: 26,
                                             color:
-                                                controller.isFavorite(
+                                                favoriteController.isFavorite(
                                                   product.id,
                                                 )
                                                 ? Colors.red
