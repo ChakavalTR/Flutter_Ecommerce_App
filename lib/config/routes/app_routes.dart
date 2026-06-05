@@ -1,4 +1,6 @@
 import 'package:flutter_ecommerce_app/config/routes/app_pages.dart';
+import 'package:flutter_ecommerce_app/modules/category/binding/category_binding.dart';
+import 'package:flutter_ecommerce_app/modules/category/view/category_view.dart';
 import 'package:flutter_ecommerce_app/modules/detail/binding/detail_binding.dart';
 import 'package:flutter_ecommerce_app/modules/detail/view/detail_view.dart';
 import 'package:flutter_ecommerce_app/modules/home/view/home_view.dart';
@@ -28,6 +30,13 @@ class AppRouting {
           name: "/${e.name}",
           page: () => DetailView(),
           binding: DetailBinding(),
+          transition: Transition.native,
+        );
+      case RouteView.category:
+        return GetPage(
+          name: "/${e.name}",
+          page: () => CategoryView(),
+          binding: CategoryBinding(),
           transition: Transition.native,
         );
     }
