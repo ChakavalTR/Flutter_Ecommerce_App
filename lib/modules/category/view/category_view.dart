@@ -17,8 +17,12 @@ class CategoryView extends GetView<CategoryController> {
   //! Build AppBar
   AppBar get _buildAppbar {
     return AppBar(
+      actionsPadding: EdgeInsets.only(right: 8),
       actions: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.shopping_cart_outlined)),
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.shopping_cart_outlined, size: 26),
+        ),
       ],
       title: Text(
         'Categories',
@@ -216,12 +220,25 @@ class CategoryView extends GetView<CategoryController> {
                                       margin: const EdgeInsets.only(right: 10),
                                       alignment: Alignment.center,
                                       child: IconButton(
-                                        onPressed: () {},
-                                        icon: Icon(
-                                          Icons.favorite_border,
-                                          size: 26,
-                                          color: Colors.grey[600],
-                                        ),
+                                        onPressed: () {
+                                          controller.toggleFavoriteStatus(
+                                            product.id,
+                                          );
+                                        },
+                                        icon: Obx(() {
+                                          return Icon(
+                                            controller.isFavorite(product.id)
+                                                ? Icons.favorite
+                                                : Icons.favorite_border,
+                                            size: 26,
+                                            color:
+                                                controller.isFavorite(
+                                                  product.id,
+                                                )
+                                                ? Colors.red
+                                                : Colors.grey[600],
+                                          );
+                                        }),
                                       ),
                                     ),
                                   ],

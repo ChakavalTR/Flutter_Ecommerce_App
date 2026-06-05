@@ -7,6 +7,7 @@ class CategoryController extends GetxController {
   final homeController = Get.find<HomeController>();
   final selectedCategory = 0.obs;
   List<Map<String, dynamic>> get categories => homeController.categories;
+  final favoriteToggle = <int>{}.obs;
   //--------------------------------------------
   //* Lifecycle Section *\\
   @override
@@ -50,6 +51,19 @@ class CategoryController extends GetxController {
     );
     if (index != -1) {
       selectedCategory.value = index;
+    }
+  }
+
+  //! Toggle Favorite
+  bool isFavorite(int productId) {
+    return favoriteToggle.contains(productId);
+  }
+
+  void toggleFavoriteStatus(int productId) {
+    if (isFavorite(productId)) {
+      favoriteToggle.remove(productId);
+    } else {
+      favoriteToggle.add(productId);
     }
   }
 }
