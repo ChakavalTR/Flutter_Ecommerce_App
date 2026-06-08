@@ -222,7 +222,6 @@ class HomeController extends GetxController {
   Future<void> fetchProducts() async {
     try {
       isLoading.value = true;
-      await Future.delayed(Duration(seconds: 2));
       final response = await ApiService.get('/api/products');
       final List data = response.data;
       products.value = data.map((json) => ProductModel.fromJson(json)).toList();
