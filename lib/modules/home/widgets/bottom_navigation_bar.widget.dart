@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
+import 'package:flutter_ecommerce_app/modules/favorite/controller/favorite_controller.dart';
 import 'package:flutter_ecommerce_app/modules/home/controller/home_controller.dart';
 import 'package:get/get.dart';
 
 class BottomNavigationBarWidget extends GetView<HomeController> {
-  const BottomNavigationBarWidget({super.key});
-
+  BottomNavigationBarWidget({super.key});
+  final favoriteController = Get.find<FavoriteController>();
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       final currentIndex = controller.currentIndex.value;
+      final favoriteCount = favoriteController.favoriteProducts.length;
       return SizedBox(
         height: 93,
         child: BottomNavigationBar(
@@ -40,9 +42,21 @@ class BottomNavigationBarWidget extends GetView<HomeController> {
               label: 'Category',
             ),
             BottomNavigationBarItem(
-              icon: currentIndex == 2
-                  ? Icon(Icons.favorite, size: 28)
-                  : Icon(Icons.favorite_border, size: 28),
+              icon: Badge(
+                isLabelVisible: favoriteCount > 0,
+                backgroundColor: AppTheme.danger,
+                label: Text(
+                  favoriteCount.toString(),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                child: currentIndex == 2
+                    ? Icon(Icons.favorite, size: 28)
+                    : Icon(Icons.favorite_border, size: 28),
+              ),
               label: 'Favorites',
             ),
             BottomNavigationBarItem(

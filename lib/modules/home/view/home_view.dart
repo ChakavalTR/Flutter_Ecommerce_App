@@ -78,29 +78,21 @@ class HomeView extends GetView<HomeController> {
                   onPressed: () {
                     Get.to(() => CartView());
                   },
-                  icon: Icon(Icons.shopping_cart_outlined),
-                ),
-              ],
-            ),
-            Positioned(
-              right: 4,
-              top: 4,
-              child: Container(
-                padding: const EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  color: AppTheme.danger,
-                  shape: BoxShape.circle,
-                ),
-                constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    '0',
-                    style: TextStyle(color: Colors.white, fontSize: 10),
-                    textAlign: TextAlign.center,
+                  icon: Badge(
+                    isLabelVisible: controller.flashSaleProducts.length > 0,
+                    backgroundColor: AppTheme.danger,
+                    label: Text(
+                      controller.flashSaleProducts.length.toString(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    child: Icon(Icons.shopping_cart_outlined),
                   ),
                 ),
-              ),
+              ],
             ),
           ],
         ),
