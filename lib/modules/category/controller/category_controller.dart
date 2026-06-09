@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/data/models/product_model.dart';
 import 'package:flutter_ecommerce_app/modules/home/controller/home_controller.dart';
 import 'package:get/get.dart';
@@ -7,6 +8,7 @@ class CategoryController extends GetxController {
   final homeController = Get.find<HomeController>();
   final selectedCategory = 0.obs;
   List<Map<String, dynamic>> get categories => homeController.categories;
+  final isRefreshing = false.obs;
   //--------------------------------------------
   //* Lifecycle Section *\\
   @override
@@ -50,6 +52,24 @@ class CategoryController extends GetxController {
     );
     if (index != -1) {
       selectedCategory.value = index;
+    }
+  }
+
+  //! Refresh Products
+  Future<void> refreshCategoryProduct() async {
+    try {
+      isRefreshing.value = true;
+      await homeController.fetchProducts();
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to refresh products',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+    } finally {
+      isRefreshing.value = false;
     }
   }
 }

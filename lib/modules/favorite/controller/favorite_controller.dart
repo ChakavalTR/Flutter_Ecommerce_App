@@ -47,12 +47,12 @@ class FavoriteController extends GetxController {
         backgroundColor: Colors.redAccent,
         colorText: Colors.white,
       );
+      await saveFavorites();
       await Future.delayed(const Duration(milliseconds: 1500), () {
         Get.closeCurrentSnackbar();
       });
     } else {
       favoriteProducts.add(productId);
-
       Get.snackbar(
         'Added Successfully',
         'Added to favorites',

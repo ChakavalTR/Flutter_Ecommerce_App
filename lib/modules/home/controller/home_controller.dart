@@ -35,6 +35,7 @@ class HomeController extends GetxController {
   var isLoading = false.obs;
   var currentIndex = 0.obs;
   final RxList<ProductModel> flashSaleProducts = <ProductModel>[].obs;
+  final isRefreshing = false.obs;
   //-------------------------------------------
   //* Lifecycle Section *\\
   @override
@@ -142,6 +143,23 @@ class HomeController extends GetxController {
   //   isFlashSaleEnded.value = true;
   //   await startFlashSaleCountdown();
   // }
+
+  //! Refresh Products
+  Future<void> refreshHome() async {
+    try {
+      isRefreshing.value = true;
+      await fetchProducts();
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to refresh products. Please try again.',
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+    } finally {
+      isRefreshing.value = false;
+    }
+  }
 
   //-------------------------------------------
   //* Sale By Category Section *\\

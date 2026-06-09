@@ -10,6 +10,7 @@ import 'package:flutter_ecommerce_app/modules/home/widgets/audio_category_widget
 import 'package:flutter_ecommerce_app/modules/home/widgets/banner_widget.dart';
 import 'package:flutter_ecommerce_app/modules/home/widgets/best_selling_widget.dart';
 import 'package:flutter_ecommerce_app/modules/home/widgets/bottom_navigation_bar.widget.dart';
+import 'package:flutter_ecommerce_app/modules/home/widgets/home_product_shimmer_card.dart';
 import 'package:flutter_ecommerce_app/widgets/categories_widget.dart';
 import 'package:flutter_ecommerce_app/modules/home/widgets/flash_sale_widget.dart';
 import 'package:flutter_ecommerce_app/modules/home/widgets/gaming_category_widget.dart';
@@ -46,7 +47,21 @@ class HomeView extends GetView<HomeController> {
         final currentView = view[currentIndex];
         return Scaffold(
           appBar: currentIndex == 0 ? _buildAppbar : null,
-          body: currentView,
+          body: currentIndex == 0
+              ? Obx(() {
+                  if (controller.isRefreshing.value) {
+                    return HomeProductShimmerWidget();
+                  }
+                  return RefreshIndicator(
+                    backgroundColor: Colors.white,
+                    color: AppTheme.primary,
+                    onRefresh: () async {
+                      await controller.refreshHome();
+                    },
+                    child: _buildBody,
+                  );
+                })
+              : currentView,
           bottomNavigationBar: BottomNavigationBarWidget(),
         );
       }),
@@ -79,7 +94,7 @@ class HomeView extends GetView<HomeController> {
                     Get.to(() => CartView());
                   },
                   icon: Badge(
-                    isLabelVisible: controller.flashSaleProducts.length > 0,
+                    isLabelVisible: controller.flashSaleProducts.isNotEmpty,
                     backgroundColor: AppTheme.danger,
                     label: Text(
                       controller.flashSaleProducts.length.toString(),
