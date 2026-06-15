@@ -57,7 +57,7 @@ class BottomNavigationBarWidget extends GetView<HomeController> {
                     ? Icon(Icons.favorite, size: 28)
                     : Icon(Icons.favorite_border, size: 28),
               ),
-              label: 'Favorites',
+              label: 'Wishlist',
             ),
             BottomNavigationBarItem(
               icon: currentIndex == 3

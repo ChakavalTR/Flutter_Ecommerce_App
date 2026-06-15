@@ -47,7 +47,7 @@ class CategoryView extends GetView<CategoryController> {
               return Center(
                 child: Text(
                   "No products available",
-                  style: TextStyle(color: AppTheme.darkText, fontSize: 16),
+                  style: TextStyle(color: AppTheme.darkText, fontSize: 18),
                 ),
               );
             }
@@ -157,7 +157,7 @@ class CategoryView extends GetView<CategoryController> {
                                             maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 17,
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -169,29 +169,11 @@ class CategoryView extends GetView<CategoryController> {
                                           ),
                                           Row(
                                             children: [
-                                              ...List.generate(5, (index) {
-                                                if (index <
-                                                    product.rating.round()) {
-                                                  return Icon(
-                                                    Icons.star,
-                                                    color: Colors.amber,
-                                                    size: 16,
-                                                  );
-                                                } else if (index <
-                                                    product.rating) {
-                                                  return Icon(
-                                                    Icons.star_half,
-                                                    color: Colors.amber,
-                                                    size: 16,
-                                                  );
-                                                } else {
-                                                  return Icon(
-                                                    Icons.star_border,
-                                                    color: Colors.amber,
-                                                    size: 16,
-                                                  );
-                                                }
-                                              }),
+                                              Icon(
+                                                Icons.star,
+                                                color: Colors.amber,
+                                                size: 16,
+                                              ),
                                               const SizedBox(width: 4),
                                               Text(
                                                 product.rating.toString(),
