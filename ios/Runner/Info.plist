@@ -74,5 +74,9 @@
 		<string>This app needs permission to save photos.</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>This app uses the microphone for voice search.</string>
+		<key>NSSpeechRecognitionUsageDescription</key>
+		<string>This app uses speech recognition for voice search.</string>
 	</dict>
 </plist>

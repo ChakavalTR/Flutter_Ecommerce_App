@@ -26,6 +26,7 @@ dependencies:
   dio: ^5.9.2
   smooth_page_indicator: ^2.0.1
   gal: ^2.3.2
+  speech_to_text: ^7.4.0
 
 dev_dependencies:
   flutter_test:

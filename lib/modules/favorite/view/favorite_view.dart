@@ -4,6 +4,7 @@ import 'package:flutter_ecommerce_app/config/routes/app_pages.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
 import 'package:flutter_ecommerce_app/modules/category/controller/category_controller.dart';
 import 'package:flutter_ecommerce_app/modules/favorite/controller/favorite_controller.dart';
+import 'package:flutter_ecommerce_app/modules/favorite/widgets/favorite_shimmer_widget.dart';
 import 'package:get/get.dart';
 
 class FavoriteView extends StatelessWidget {
@@ -35,7 +36,7 @@ class FavoriteView extends StatelessWidget {
           .where((product) => favoriteController.isFavorite(product.id))
           .toList();
       if (categoryController.isRefreshing.value) {
-        return Center(child: RefreshProgressIndicator());
+        return WishlistShimmerWidget();
       } else if (favoriteProducts.isEmpty) {
         return Center(
           child: Text(
