@@ -1,5 +1,8 @@
 // ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce_app/core/services/local_storage_service.dart';
+import 'package:flutter_ecommerce_app/data/models/product_model.dart';
+import 'package:flutter_ecommerce_app/modules/home/controller/home_controller.dart';
 import 'package:flutter_ecommerce_app/modules/search/widgets/voice_search_bottom_sheet_widget.dart';
 import 'package:get/get.dart';
 import 'package:speech_to_text/speech_to_text.dart';
@@ -10,6 +13,10 @@ class SearchProductController extends GetxController {
   final isTyping = false.obs;
   final isListening = false.obs;
   final SpeechToText speechToText = SpeechToText();
+  final recentSearches = <String>[].obs;
+  static const recentSearchKey = 'recent_searches';
+  final homeController = Get.find<HomeController>();
+  final searchProducts = <ProductModel>[].obs;
   //-------------------------------------------
   //* Lifecycle Section *\\
   @override
@@ -17,6 +24,12 @@ class SearchProductController extends GetxController {
     searchController.dispose();
     speechToText.stop();
     super.onClose();
+  }
+
+  @override
+  void onInit() {
+    loadRecentSearches();
+    super.onInit();
   }
 
   //-------------------------------------------
@@ -30,6 +43,7 @@ class SearchProductController extends GetxController {
   void clearSearch() {
     searchController.clear();
     isTyping.value = false;
+    searchProducts.clear();
   }
 
   //! Start Listening
@@ -75,7 +89,11 @@ class SearchProductController extends GetxController {
         );
         isTyping.value = searchController.text.trim().isNotEmpty;
         if (result.finalResult) {
+          addRecentSearch(result.recognizedWords);
           isListening.value = false;
+          if (Get.isBottomSheetOpen ?? false) {
+            Get.back();
+          }
         }
       },
     );
@@ -97,5 +115,57 @@ class SearchProductController extends GetxController {
   Future<void> stopListening() async {
     isListening.value = false;
     await speechToText.stop();
+  }
+
+  //! Add Recent Search
+  Future<void> addRecentSearch(String value) async {
+    final text = value.trim();
+    if (text.isEmpty) return;
+    recentSearches.remove(text);
+    recentSearches.insert(0, text);
+    await saveRecentSearches();
+  }
+
+  //! Remove One Recent Search
+  Future<void> removeRecentSearch(String value) async {
+    recentSearches.remove(value);
+    await saveRecentSearches();
+  }
+
+  //! Clear All Recent Searches
+  Future<void> clearAllRecentSearches() async {
+    recentSearches.clear();
+    await saveRecentSearches();
+  }
+
+  //! Load Recent Searches from Storage
+  void loadRecentSearches() {
+    final saved = LocalServiceStorage.instance.getStringList(recentSearchKey);
+    if (saved != null) {
+      recentSearches.assignAll(saved);
+    }
+  }
+
+  //! Save Recent Searches to Storage
+  Future<void> saveRecentSearches() async {
+    await LocalServiceStorage.instance.setStringList(
+      recentSearchKey,
+      recentSearches.toList(),
+    );
+  }
+
+  //! Search Products
+  void onSearch(String value) {
+    final keyword = value.trim().toLowerCase();
+    isTyping.value = keyword.isNotEmpty;
+    if (keyword.isEmpty) {
+      searchProducts.clear();
+      return;
+    }
+    searchProducts.value = homeController.products.where((product) {
+      return product.title.toLowerCase().contains(keyword) ||
+          product.brand.toLowerCase().contains(keyword) ||
+          product.category.toLowerCase().contains(keyword);
+    }).toList();
   }
 }

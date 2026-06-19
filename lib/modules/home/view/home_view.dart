@@ -119,6 +119,7 @@ class HomeView extends GetView<HomeController> {
   ListView get _buildBody {
     final isSelectedCategory = controller.selectedCategory.value;
     return ListView(
+      controller: controller.homeScrollController,
       children: [
         BannerWidget(),
         TitleWidget(

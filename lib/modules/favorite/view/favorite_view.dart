@@ -5,13 +5,14 @@ import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
 import 'package:flutter_ecommerce_app/modules/category/controller/category_controller.dart';
 import 'package:flutter_ecommerce_app/modules/favorite/controller/favorite_controller.dart';
 import 'package:flutter_ecommerce_app/modules/favorite/widgets/favorite_shimmer_widget.dart';
+import 'package:flutter_ecommerce_app/modules/home/controller/home_controller.dart';
 import 'package:get/get.dart';
 
 class FavoriteView extends StatelessWidget {
   FavoriteView({super.key});
   final favoriteController = Get.find<FavoriteController>();
   final categoryController = Get.find<CategoryController>();
-
+  final scrollController = Get.find<HomeController>().favoriteScrollController;
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: _buildAppbar, body: _buildBody);
@@ -31,7 +32,7 @@ class FavoriteView extends StatelessWidget {
   //! Build Body
   Widget get _buildBody {
     return Obx(() {
-      final products = categoryController.getProducts;
+      final products = categoryController.homeController.products;
       final favoriteProducts = products
           .where((product) => favoriteController.isFavorite(product.id))
           .toList();
@@ -46,6 +47,7 @@ class FavoriteView extends StatelessWidget {
         );
       }
       return Scrollbar(
+        controller: scrollController,
         radius: Radius.circular(15),
         thickness: 7,
         child: Padding(
@@ -55,6 +57,7 @@ class FavoriteView extends StatelessWidget {
             backgroundColor: Colors.white,
             color: AppTheme.primary,
             child: ListView.builder(
+              controller: scrollController,
               itemCount: favoriteProducts.length,
               itemBuilder: (context, index) {
                 final product = favoriteProducts[index];

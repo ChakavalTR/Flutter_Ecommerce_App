@@ -14,7 +14,14 @@ class SearchWidget extends GetView<SearchProductController> {
         child: TextField(
           keyboardType: TextInputType.text,
           controller: controller.searchController,
-          onChanged: controller.onSearchChange,
+          onChanged: (value) {
+            controller.onSearchChange(value);
+            controller.onSearch(value);
+          },
+          onSubmitted: (value) {
+            controller.addRecentSearch(value);
+            controller.onSearch(value);
+          },
           decoration: InputDecoration(
             hintText: 'Search products...',
             hintStyle: TextStyle(
@@ -34,7 +41,7 @@ class SearchWidget extends GetView<SearchProductController> {
                 onPressed: () {
                   controller.openVoiceSearchSheet();
                 },
-                icon: const Icon(Icons.mic_none_outlined, size: 26),
+                icon: const Icon(Icons.mic_none_outlined, size: 25),
               );
             }),
             filled: true,

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
 
-class TitleWidget extends StatelessWidget {
+class TitleSearchWidget extends StatelessWidget {
   final String title;
   final VoidCallback? onTap;
-  const TitleWidget({super.key, required this.title, this.onTap});
+  const TitleSearchWidget({super.key, required this.title, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -17,23 +17,16 @@ class TitleWidget extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: AppTheme.darkBg,
               ),
             ),
             Spacer(),
             if (onTap != null)
-              TextButton(
+              IconButton(
                 onPressed: onTap,
-                child: Text(
-                  'See All',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: AppTheme.primary,
-                  ),
-                ),
+                icon: Icon(Icons.delete, color: AppTheme.danger),
               ),
           ],
         ),

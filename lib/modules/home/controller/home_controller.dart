@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/core/services/api_service.dart';
 import 'package:flutter_ecommerce_app/core/services/local_storage_service.dart';
 import 'package:flutter_ecommerce_app/data/models/product_model.dart';
+import 'package:flutter_ecommerce_app/modules/category/controller/category_controller.dart';
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
@@ -36,6 +37,9 @@ class HomeController extends GetxController {
   var currentIndex = 0.obs;
   final RxList<ProductModel> flashSaleProducts = <ProductModel>[].obs;
   final isRefreshing = false.obs;
+  final homeScrollController = ScrollController();
+  final categoryScrollController = ScrollController();
+  final favoriteScrollController = ScrollController();
   //-------------------------------------------
   //* Lifecycle Section *\\
   @override
@@ -53,6 +57,9 @@ class HomeController extends GetxController {
     timerBanner?.cancel();
     bannerController.dispose();
     timerFlashSale?.cancel();
+    homeScrollController.dispose();
+    categoryScrollController.dispose();
+    favoriteScrollController.dispose();
     super.onClose();
   }
 
@@ -132,7 +139,53 @@ class HomeController extends GetxController {
 
   //! Bottom Navigation Bar Change
   void changeBottomNav(int index) {
+    if (currentIndex.value == index) {
+      reloadCurrentTab(index);
+      return;
+    }
     currentIndex.value = index;
+  }
+
+  //! On ReSelect Refresh Bottom Navigation Bar
+  Future<void> reloadCurrentTab(int index) async {
+    switch (index) {
+      case 0:
+        if (homeScrollController.hasClients) {
+          await homeScrollController.animateTo(
+            0,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+        }
+        await refreshHome();
+        break;
+      case 1:
+        if (categoryScrollController.hasClients) {
+          await categoryScrollController.animateTo(
+            0,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+        }
+        await Get.find<CategoryController>().refreshCategoryProduct();
+        break;
+      case 2:
+        if (favoriteScrollController.hasClients) {
+          await favoriteScrollController.animateTo(
+            0,
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+        }
+        await Get.find<CategoryController>().refreshCategoryProduct();
+        break;
+      case 3:
+        // Add logic to refresh cart tab if needed
+        break;
+      case 4:
+        // Add logic to refresh profile tab if needed
+        break;
+    }
   }
 
   //! Flash Countdown reset (for testing)

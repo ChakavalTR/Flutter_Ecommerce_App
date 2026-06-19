@@ -3,8 +3,9 @@ import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
 import 'package:flutter_ecommerce_app/modules/cart/view/cart_view.dart';
 import 'package:flutter_ecommerce_app/modules/home/controller/home_controller.dart';
 import 'package:flutter_ecommerce_app/modules/search/controller/search_controller.dart';
+import 'package:flutter_ecommerce_app/modules/search/widgets/search_result_widget.dart';
 import 'package:flutter_ecommerce_app/modules/search/widgets/search_widget.dart';
-import 'package:flutter_ecommerce_app/modules/search/widgets/title_widget.dart';
+import 'package:flutter_ecommerce_app/modules/search/widgets/recent_search_widget.dart';
 import 'package:get/get.dart';
 
 class SearchView extends GetView<SearchProductController> {
@@ -56,10 +57,17 @@ class SearchView extends GetView<SearchProductController> {
 
   //! Build Body
   Widget get _buildBody {
-    return Column(
+    return ListView(
       children: [
         SearchWidget(),
-        TitleWidget(title: 'Recent Searches', onTap: () {}),
+        RecentSearchWidget(),
+        SizedBox(height: 14),
+        Obx(() {
+          if (controller.searchProducts.isEmpty) {
+            return SizedBox.shrink();
+          }
+          return SearchResultWidget(products: controller.searchProducts);
+        }),
       ],
     );
   }

@@ -5,12 +5,14 @@ import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
 import 'package:flutter_ecommerce_app/modules/category/controller/category_controller.dart';
 import 'package:flutter_ecommerce_app/modules/category/widgets/category_product_shimmer_card.widget.dart';
 import 'package:flutter_ecommerce_app/modules/favorite/controller/favorite_controller.dart';
+import 'package:flutter_ecommerce_app/modules/home/controller/home_controller.dart';
 import 'package:flutter_ecommerce_app/widgets/categories_widget.dart';
 import 'package:get/get.dart';
 
 class CategoryView extends GetView<CategoryController> {
   CategoryView({super.key});
   final favoriteController = Get.find<FavoriteController>();
+  final scrollController = Get.find<HomeController>().categoryScrollController;
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: _buildAppbar, body: _buildBody);
@@ -74,6 +76,7 @@ class CategoryView extends GetView<CategoryController> {
                 ),
                 Expanded(
                   child: Scrollbar(
+                    controller: scrollController,
                     radius: Radius.circular(15),
                     thickness: 7,
                     child: RefreshIndicator(
@@ -82,6 +85,7 @@ class CategoryView extends GetView<CategoryController> {
                       color: AppTheme.primary,
                       child: ListView.builder(
                         padding: const EdgeInsets.only(left: 16, right: 16),
+                        controller: scrollController,
                         itemCount: products.length,
                         itemBuilder: (context, index) {
                           final product = products[index];

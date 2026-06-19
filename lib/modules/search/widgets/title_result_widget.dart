@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
 
-class TitleWidget extends StatelessWidget {
+class TitleResultWidget extends StatelessWidget {
   final String title;
   final VoidCallback? onTap;
-  const TitleWidget({super.key, required this.title, this.onTap});
+  final int resultCount;
+  const TitleResultWidget({
+    super.key,
+    required this.title,
+    this.onTap,
+    required this.resultCount,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 16, right: 10),
+      padding: const EdgeInsets.only(left: 16, right: 16),
       child: Align(
         alignment: Alignment.centerLeft,
         child: Row(
@@ -17,24 +23,20 @@ class TitleWidget extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: AppTheme.darkBg,
               ),
             ),
             Spacer(),
-            if (onTap != null)
-              TextButton(
-                onPressed: onTap,
-                child: Text(
-                  'See All',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: AppTheme.primary,
-                  ),
-                ),
+            Text(
+              '$resultCount results found',
+              style: TextStyle(
+                fontSize: 14,
+                color: AppTheme.greyText.withOpacity(0.7),
+                fontWeight: FontWeight.bold,
               ),
+            ),
           ],
         ),
       ),
