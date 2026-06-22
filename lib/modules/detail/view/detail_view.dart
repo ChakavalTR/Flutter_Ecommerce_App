@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce_app/config/routes/app_pages.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
 import 'package:flutter_ecommerce_app/modules/cart/view/cart_view.dart';
 import 'package:flutter_ecommerce_app/modules/detail/view/image_preview_view.dart';
@@ -18,7 +19,7 @@ class DetailView extends GetView<DetailController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(top: true, child: _buildBody),
-      bottomNavigationBar: const BottomnavigationBarWidget(),
+      bottomNavigationBar: BottomnavigationBarWidget(),
     );
   }
 
@@ -65,7 +66,7 @@ class DetailView extends GetView<DetailController> {
               ),
               child: IconButton(
                 onPressed: () {
-                  Get.to(() => CartView());
+                  RouteView.cart.go();
                 },
                 icon: const Icon(
                   Icons.shopping_cart_outlined,

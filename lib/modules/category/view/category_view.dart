@@ -94,7 +94,7 @@ class CategoryView extends GetView<CategoryController> {
                               RouteView.detail.go(arguments: product);
                             },
                             child: Container(
-                              height: 140,
+                              height: 160,
                               margin: const EdgeInsets.only(bottom: 12),
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -187,6 +187,13 @@ class CategoryView extends GetView<CategoryController> {
                                                 ),
                                               ),
                                             ],
+                                          ),
+                                          Text(
+                                            "(${product.stock.toString()} in stocks)",
+                                            style: TextStyle(
+                                              color: Colors.redAccent,
+                                              fontSize: 14,
+                                            ),
                                           ),
                                           Spacer(),
                                           Text(

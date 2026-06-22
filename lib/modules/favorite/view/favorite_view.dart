@@ -66,7 +66,7 @@ class FavoriteView extends StatelessWidget {
                     RouteView.detail.go(arguments: product);
                   },
                   child: Container(
-                    height: 100,
+                    height: 110,
                     margin: EdgeInsets.only(bottom: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -86,11 +86,11 @@ class FavoriteView extends StatelessWidget {
                           child: CachedNetworkImage(
                             imageUrl: product.image,
                             width: 110,
-                            height: 100,
+                            height: 110,
                             fit: BoxFit.cover,
                             placeholder: (context, url) => Container(
                               width: 110,
-                              height: 100,
+                              height: 110,
                               color: Colors.grey[300],
                               child: Center(
                                 child: CircularProgressIndicator(
@@ -102,7 +102,7 @@ class FavoriteView extends StatelessWidget {
                             ),
                             errorWidget: (context, url, error) => Container(
                               width: 110,
-                              height: 100,
+                              height: 110,
                               color: Colors.grey[300],
                               child: Center(
                                 child: Icon(Icons.error, color: Colors.red),
@@ -123,7 +123,14 @@ class FavoriteView extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(height: 5),
+                              Text(
+                                "${product.category} | ${product.brand}",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              SizedBox(height: 10),
                               Text(
                                 '\$${product.price.toStringAsFixed(0)}',
                                 style: TextStyle(

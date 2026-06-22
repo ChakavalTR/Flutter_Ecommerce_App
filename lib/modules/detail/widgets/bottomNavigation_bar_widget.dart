@@ -1,11 +1,13 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce_app/modules/cart/controller/cart_controller.dart';
 import 'package:flutter_ecommerce_app/modules/detail/controller/detail_controller.dart';
 import 'package:get/get.dart';
 
 class BottomnavigationBarWidget extends GetView<DetailController> {
-  const BottomnavigationBarWidget({super.key});
-
+  BottomnavigationBarWidget({super.key});
+  final detailController = Get.find<DetailController>();
+  final cartController = Get.find<CartController>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,7 +21,9 @@ class BottomnavigationBarWidget extends GetView<DetailController> {
               child: SizedBox(
                 height: 55,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    cartController.addToCart(detailController.product);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.yellow[600],
                     shape: RoundedRectangleBorder(

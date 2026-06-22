@@ -1,6 +1,8 @@
 import 'package:flutter_ecommerce_app/config/routes/app_pages.dart';
 import 'package:flutter_ecommerce_app/modules/ad_splash/binding/ad_splash_binding.dart';
 import 'package:flutter_ecommerce_app/modules/ad_splash/view/ad_splash_view.dart';
+import 'package:flutter_ecommerce_app/modules/cart/binding/cart_binding.dart';
+import 'package:flutter_ecommerce_app/modules/cart/view/cart_view.dart';
 import 'package:flutter_ecommerce_app/modules/category/binding/category_binding.dart';
 import 'package:flutter_ecommerce_app/modules/category/view/category_view.dart';
 import 'package:flutter_ecommerce_app/modules/detail/binding/detail_binding.dart';
@@ -46,6 +48,13 @@ class AppRouting {
           name: "/${e.name}",
           page: () => const AdSplashView(),
           binding: AdSplashBinding(),
+          transition: Transition.native,
+        );
+      case RouteView.cart:
+        return GetPage(
+          name: "/${e.name}",
+          page: () => CartView(),
+          binding: CartBinding(),
           transition: Transition.native,
         );
     }
