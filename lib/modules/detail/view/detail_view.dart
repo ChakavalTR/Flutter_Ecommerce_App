@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/config/routes/app_pages.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
-import 'package:flutter_ecommerce_app/modules/cart/view/cart_view.dart';
 import 'package:flutter_ecommerce_app/modules/detail/view/image_preview_view.dart';
 import 'package:flutter_ecommerce_app/modules/detail/widgets/bottomNavigation_bar_widget.dart';
 import 'package:flutter_ecommerce_app/modules/detail/widgets/color_option_widget.dart';
