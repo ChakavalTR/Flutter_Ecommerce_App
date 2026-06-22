@@ -18,7 +18,7 @@ class App extends StatelessWidget {
 
       //! Routing(),
       getPages: AppRouting.route,
-      initialRoute: RouteView.home.name,
+      initialRoute: RouteView.adSplash.name,
       initialBinding: HomeBinding(),
     );
   }

@@ -62,7 +62,7 @@ class RecentSearchWidget extends GetView<SearchProductController> {
             },
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 14),
+            padding: EdgeInsets.symmetric(horizontal: 16),
             child: Align(
               alignment: Alignment.centerLeft,
               child: Wrap(

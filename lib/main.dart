@@ -13,7 +13,5 @@ Future<void> main() async {
   //! Load .env file
   await dotenv.load(fileName: ".env");
 
-  //! Splash Screen
-  await Future.delayed(const Duration(milliseconds: 1500));
   runApp(const App());
 }
