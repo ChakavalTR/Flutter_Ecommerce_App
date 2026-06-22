@@ -36,7 +36,7 @@ class AdSplashView extends GetView<AdSplashController> {
                 controller.countdown.value.toString(),
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
