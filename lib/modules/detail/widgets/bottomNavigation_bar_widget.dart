@@ -22,7 +22,16 @@ class BottomnavigationBarWidget extends GetView<DetailController> {
                 height: 55,
                 child: ElevatedButton(
                   onPressed: () {
-                    cartController.addToCart(detailController.product);
+                    cartController.addToCart(
+                      product: detailController.product,
+                      selectedColor: detailController
+                          .colorsOption[detailController.selectedColors.value],
+                      selectedStorage: detailController.showStorage
+                          ? detailController.storagesOption[detailController
+                                .selectedStorage
+                                .value]
+                          : null,
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.yellow[600],

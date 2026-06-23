@@ -8,6 +8,7 @@ import 'package:flutter_ecommerce_app/modules/favorite/controller/favorite_contr
 import 'package:flutter_ecommerce_app/modules/home/controller/home_controller.dart';
 import 'package:flutter_ecommerce_app/widgets/categories_widget.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class CategoryView extends GetView<CategoryController> {
   CategoryView({super.key});
@@ -197,7 +198,10 @@ class CategoryView extends GetView<CategoryController> {
                                           ),
                                           Spacer(),
                                           Text(
-                                            '\$${product.price.toStringAsFixed(0)}',
+                                            NumberFormat.currency(
+                                              symbol: '\$',
+                                              decimalDigits: 2,
+                                            ).format(product.price),
                                             style: TextStyle(
                                               color: Colors.green,
                                               fontSize: 18,

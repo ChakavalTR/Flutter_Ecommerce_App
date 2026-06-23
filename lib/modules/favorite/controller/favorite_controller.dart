@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 class FavoriteController extends GetxController {
   //* Variables Section *\\
-  final favoriteProducts = <int>{}.obs;
+  final favoriteProducts = <int>[].obs;
   static const String favoriteKey = 'favorite_products';
   //--------------------------------------------
   //* Lifecycle Section *\\
@@ -48,11 +48,11 @@ class FavoriteController extends GetxController {
         colorText: Colors.white,
       );
       await saveFavorites();
-      await Future.delayed(const Duration(milliseconds: 1500), () {
+      await Future.delayed(const Duration(milliseconds: 900), () {
         Get.closeCurrentSnackbar();
       });
     } else {
-      favoriteProducts.add(productId);
+      favoriteProducts.insert(0, productId);
       Get.snackbar(
         'Added Successfully',
         'Added to favorites',
@@ -61,7 +61,7 @@ class FavoriteController extends GetxController {
         colorText: Colors.white,
       );
       await saveFavorites();
-      await Future.delayed(const Duration(milliseconds: 1500), () {
+      await Future.delayed(const Duration(milliseconds: 900), () {
         Get.closeCurrentSnackbar();
       });
     }

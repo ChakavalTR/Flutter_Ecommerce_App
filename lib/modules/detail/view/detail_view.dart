@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/config/routes/app_pages.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
+import 'package:flutter_ecommerce_app/modules/cart/controller/cart_controller.dart';
 import 'package:flutter_ecommerce_app/modules/detail/view/image_preview_view.dart';
 import 'package:flutter_ecommerce_app/modules/detail/widgets/bottomNavigation_bar_widget.dart';
 import 'package:flutter_ecommerce_app/modules/detail/widgets/color_option_widget.dart';
@@ -9,11 +10,13 @@ import 'package:flutter_ecommerce_app/modules/detail/widgets/storage_option_widg
 import 'package:flutter_ecommerce_app/modules/favorite/controller/favorite_controller.dart';
 import 'package:get/get.dart';
 import 'package:flutter_ecommerce_app/modules/detail/controller/detail_controller.dart';
+import 'package:intl/intl.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class DetailView extends GetView<DetailController> {
   DetailView({super.key});
   final favoriteController = Get.find<FavoriteController>();
+  final cartController = Get.find<CartController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,18 +70,32 @@ class DetailView extends GetView<DetailController> {
                 onPressed: () {
                   RouteView.cart.go();
                 },
-                icon: const Icon(
-                  Icons.shopping_cart_outlined,
-                  color: Colors.white,
-                  size: 26,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black45,
-                      blurRadius: 4,
-                      offset: Offset(0, 2),
+                icon: Obx(() {
+                  return Badge(
+                    isLabelVisible: cartController.cartItems.isNotEmpty,
+                    backgroundColor: AppTheme.danger,
+                    label: Text(
+                      cartController.cartItems.length.toString(),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ],
-                ),
+                    child: Icon(
+                      Icons.shopping_cart_outlined,
+                      color: Colors.white,
+                      size: 26,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black45,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                  );
+                }),
               ),
             ),
             SizedBox(width: 5),
@@ -108,6 +125,9 @@ class DetailView extends GetView<DetailController> {
                       controller.saveImage(controller.product.image);
                       break;
                     case 'share':
+                      Future.delayed(const Duration(milliseconds: 1000), () {
+                        Get.closeCurrentSnackbar();
+                      });
                       Get.snackbar(
                         'Coming Soon',
                         'Share product feature is coming soon!',
@@ -117,6 +137,9 @@ class DetailView extends GetView<DetailController> {
                       );
                       break;
                     case 'report':
+                      Future.delayed(const Duration(milliseconds: 1000), () {
+                        Get.closeCurrentSnackbar();
+                      });
                       Get.snackbar(
                         'Coming Soon',
                         'Report product feature is coming soon!',
@@ -341,7 +364,10 @@ class DetailView extends GetView<DetailController> {
                       return Row(
                         children: [
                           Text(
-                            '\$${controller.product.price.toStringAsFixed(0)}',
+                            NumberFormat.currency(
+                              symbol: '\$',
+                              decimalDigits: 2,
+                            ).format(controller.product.newPrice),
                             style: TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.bold,
@@ -350,7 +376,10 @@ class DetailView extends GetView<DetailController> {
                           ),
                           SizedBox(width: 8),
                           Text(
-                            '\$${controller.product.newPrice!.toStringAsFixed(0)}',
+                            NumberFormat.currency(
+                              symbol: '\$',
+                              decimalDigits: 2,
+                            ).format(controller.product.price),
                             style: TextStyle(
                               fontSize: 20,
                               color: Colors.grey,
@@ -380,7 +409,10 @@ class DetailView extends GetView<DetailController> {
                       );
                     }
                     return Text(
-                      '\$${controller.product.price.toStringAsFixed(0)}',
+                      NumberFormat.currency(
+                        symbol: '\$',
+                        decimalDigits: 2,
+                      ).format(controller.product.price),
                       style: TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.bold,

@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce_app/core/services/local_storage_service.dart';
 import 'package:flutter_ecommerce_app/data/models/product_model.dart';
 import 'package:flutter_ecommerce_app/modules/cart/model/cart_model.dart';
 import 'package:get/get.dart';
@@ -6,21 +8,42 @@ import 'package:get/get.dart';
 class CartController extends GetxController {
   //* Variables Section *\\
   final cartItems = <CartModel>[].obs;
+  static const String cartKey = 'cart_items';
   //-------------------------------------------
   //* Lifecycle Section *\\
+  @override
+  void onInit() {
+    super.onInit();
+    loadCart();
+  }
+
   //-------------------------------------------
   //* Functions Section*\\
 
   //! Add To Cart
-  void addToCart(ProductModel product) {
+  void addToCart({
+    required ProductModel product,
+    required Color selectedColor,
+    String? selectedStorage,
+  }) async {
     final index = cartItems.indexWhere((item) {
-      return item.product.id == product.id;
+      return item.product.id == product.id &&
+          item.color == selectedColor &&
+          item.selectedStorage == selectedStorage;
     });
     if (index != -1) {
       cartItems[index].quantity.value++;
     } else {
-      cartItems.add(CartModel(product: product));
+      cartItems.insert(
+        0,
+        CartModel(
+          product: product,
+          color: selectedColor,
+          selectedStorage: selectedStorage,
+        ),
+      );
     }
+    await saveCart();
     Get.snackbar(
       'Success',
       'Product added to cart',
@@ -28,11 +51,15 @@ class CartController extends GetxController {
       backgroundColor: Colors.green,
       colorText: Colors.white,
     );
+    Future.delayed(const Duration(milliseconds: 900), () {
+      Get.closeCurrentSnackbar();
+    });
   }
 
   //! Increase Quantity
   void increaseQuantity(int index) {
     cartItems[index].quantity.value++;
+    saveCart();
   }
 
   //! Decrease Quantity
@@ -42,6 +69,7 @@ class CartController extends GetxController {
     } else {
       cartItems.removeAt(index);
     }
+    saveCart();
   }
 
   //! Clear Cart
@@ -54,6 +82,7 @@ class CartController extends GetxController {
       backgroundColor: Colors.red,
       colorText: Colors.white,
     );
+    saveCart();
   }
 
   //! Subtotal
@@ -68,4 +97,22 @@ class CartController extends GetxController {
   double get shipping => 0;
   double get discount => cartItems.isEmpty ? 0 : 50;
   double get total => subtotal + shipping - discount;
+
+  //! Save Cart to Local Storage
+  Future<void> saveCart() async {
+    await LocalServiceStorage.instance.setStringList(
+      cartKey,
+      cartItems.map((e) => jsonEncode(e.toJson())).toList(),
+    );
+  }
+
+  //! Load Cart from Local Storage
+  void loadCart() async {
+    final cartData = LocalServiceStorage.instance.getStringList(cartKey);
+    if (cartData == null || cartData.isEmpty) return;
+
+    cartItems.value = cartData
+        .map((e) => CartModel.fromJson(jsonDecode(e)))
+        .toList();
+  }
 }

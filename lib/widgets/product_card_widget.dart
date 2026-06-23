@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
+import 'package:intl/intl.dart';
 
 class ProductCardWidget extends StatelessWidget {
   final String title;
@@ -33,7 +34,7 @@ class ProductCardWidget extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-            width: 175,
+            width: 180,
             height: 180,
             decoration: BoxDecoration(
               color: AppTheme.lightBg,
@@ -114,7 +115,12 @@ class ProductCardWidget extends StatelessWidget {
                   child: Row(
                     children: [
                       Text(
-                        '\$${(isFlashSaleActive ? price : (oldPrice ?? price)).toStringAsFixed(0)}',
+                        NumberFormat.currency(
+                          symbol: '\$',
+                          decimalDigits: 2,
+                        ).format(
+                          isFlashSaleActive ? price : (oldPrice ?? price),
+                        ),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -124,7 +130,10 @@ class ProductCardWidget extends StatelessWidget {
                       const SizedBox(width: 8),
                       if (isFlashSale && isFlashSaleActive && oldPrice != null)
                         Text(
-                          '\$${oldPrice!.toStringAsFixed(0)}',
+                          NumberFormat.currency(
+                            symbol: '\$',
+                            decimalDigits: 2,
+                          ).format(oldPrice),
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -133,7 +142,7 @@ class ProductCardWidget extends StatelessWidget {
                             decorationColor: Colors.grey,
                           ),
                         ),
-                      SizedBox(width: 60),
+                      SizedBox(width: 35),
                       if (rating != null)
                         Row(
                           children: [

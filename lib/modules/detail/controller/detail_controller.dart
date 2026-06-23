@@ -26,7 +26,7 @@ class DetailController extends GetxController {
   //* Lifecycle Section *\\
   @override
   void onInit() {
-    product = Get.arguments as ProductModel;
+    _initializeProduct();
     super.onInit();
   }
 
@@ -144,5 +144,23 @@ class DetailController extends GetxController {
 
   void changeImageIndex(int index) {
     currentImageIndex.value = index;
+  }
+
+  //! Initialize Product from Arguments
+  void _initializeProduct() {
+    final args = Get.arguments;
+    if (args is ProductModel) {
+      product = args;
+      return;
+    }
+    product = args['product'];
+    final colorIndex = colorsOption.indexOf(args['color']);
+    if (colorIndex >= 0) {
+      selectedColors.value = colorIndex;
+    }
+    final storageIndex = storagesOption.indexOf(args['storage']);
+    if (storageIndex >= 0) {
+      selectedStorage.value = storageIndex;
+    }
   }
 }

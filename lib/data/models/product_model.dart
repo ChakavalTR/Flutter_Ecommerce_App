@@ -52,4 +52,21 @@ class ProductModel {
           : List<String>.from(json['images']),
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'price': price,
+      'discount': discount,
+      'new_price': newPrice,
+      'description': description,
+      'image': image,
+      'category': category,
+      'brand': brand,
+      'stock': stock,
+      'rating': rating,
+      'is_flash_sale': isFlashSale,
+      'images': images,
+    };
+  }
 }

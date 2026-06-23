@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/config/routes/app_pages.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
+import 'package:flutter_ecommerce_app/modules/cart/controller/cart_controller.dart';
 import 'package:flutter_ecommerce_app/modules/cart/view/cart_view.dart';
 import 'package:flutter_ecommerce_app/modules/category/controller/category_controller.dart';
 import 'package:flutter_ecommerce_app/modules/category/view/category_view.dart';
@@ -23,8 +24,8 @@ import 'package:get/get.dart';
 import '../controller/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
-  const HomeView({super.key});
-
+  HomeView({super.key});
+  final cartController = Get.find<CartController>();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -94,10 +95,10 @@ class HomeView extends GetView<HomeController> {
                     Get.to(() => CartView());
                   },
                   icon: Badge(
-                    isLabelVisible: controller.flashSaleProducts.isNotEmpty,
+                    isLabelVisible: cartController.cartItems.isNotEmpty,
                     backgroundColor: AppTheme.danger,
                     label: Text(
-                      controller.flashSaleProducts.length.toString(),
+                      cartController.cartItems.length.toString(),
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 10,

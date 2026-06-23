@@ -33,8 +33,8 @@ class FavoriteView extends StatelessWidget {
   Widget get _buildBody {
     return Obx(() {
       final products = categoryController.homeController.products;
-      final favoriteProducts = products
-          .where((product) => favoriteController.isFavorite(product.id))
+      final favoriteProducts = favoriteController.favoriteProducts
+          .map((id) => products.firstWhere((product) => product.id == id))
           .toList();
       if (categoryController.isRefreshing.value) {
         return WishlistShimmerWidget();
@@ -42,7 +42,11 @@ class FavoriteView extends StatelessWidget {
         return Center(
           child: Text(
             'No products in your wishlist yet.',
-            style: TextStyle(color: AppTheme.darkText, fontSize: 18),
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[600],
+            ),
           ),
         );
       }
@@ -131,14 +135,6 @@ class FavoriteView extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(height: 10),
-                              Text(
-                                '\$${product.price.toStringAsFixed(0)}',
-                                style: TextStyle(
-                                  fontSize: 16.5,
-                                  color: AppTheme.success,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
                             ],
                           ),
                         ),
