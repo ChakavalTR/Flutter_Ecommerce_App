@@ -40,6 +40,8 @@ class HomeController extends GetxController {
   final homeScrollController = ScrollController();
   final categoryScrollController = ScrollController();
   final favoriteScrollController = ScrollController();
+  final isShowBars = true.obs;
+  double lastScrollOffset = 0.0;
   //-------------------------------------------
   //* Lifecycle Section *\\
   @override
@@ -50,6 +52,7 @@ class HomeController extends GetxController {
     fetchProducts();
     startFlashSaleCountdown();
     autoScrollBanner();
+    handleScroll();
   }
 
   @override
@@ -285,6 +288,36 @@ class HomeController extends GetxController {
     return products
         .where((product) => product.category.toLowerCase() == 'gaming')
         .toList();
+  }
+
+  //! Appbar and Bottom Bar Scroll Handler
+  void handleScroll() {
+    void listener(ScrollController scrollController) {
+      final currentOffset = scrollController.offset;
+      if (currentOffset <= 0) {
+        isShowBars.value = true;
+        lastScrollOffset = currentOffset;
+        return;
+      }
+      if (currentOffset > lastScrollOffset + 10) {
+        isShowBars.value = false;
+      } else if (currentOffset < lastScrollOffset - 10) {
+        isShowBars.value = true;
+      }
+      lastScrollOffset = currentOffset;
+    }
+
+    homeScrollController.addListener(() {
+      listener(homeScrollController);
+    });
+
+    categoryScrollController.addListener(() {
+      listener(categoryScrollController);
+    });
+
+    favoriteScrollController.addListener(() {
+      listener(favoriteScrollController);
+    });
   }
 
   //-------------------------------------------

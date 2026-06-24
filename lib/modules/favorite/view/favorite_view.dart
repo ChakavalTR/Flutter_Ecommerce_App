@@ -13,6 +13,7 @@ class FavoriteView extends StatelessWidget {
   final favoriteController = Get.find<FavoriteController>();
   final categoryController = Get.find<CategoryController>();
   final scrollController = Get.find<HomeController>().favoriteScrollController;
+  final homeController = Get.find<HomeController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: _buildAppbar, body: _buildBody);

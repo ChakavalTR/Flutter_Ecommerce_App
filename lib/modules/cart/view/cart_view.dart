@@ -18,6 +18,65 @@ class CartView extends GetView<CartController> {
   //! Build AppBar
   AppBar get _buildAppBar {
     return AppBar(
+      actions: [
+        Obx(() {
+          if (!controller.hasSelectedItems) {
+            return SizedBox.shrink();
+          }
+          return TextButton(
+            onPressed: () {
+              Get.dialog(
+                AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  title: Text(
+                    'Are you sure want to clear all?',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  // content: Text(
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Get.back();
+                        controller.clearCart();
+                      },
+                      child: Text(
+                        'Clear',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+            child: Text(
+              'Clear All',
+              style: TextStyle(
+                color: AppTheme.danger,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          );
+        }),
+      ],
       title: Text(
         'Cart',
         style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -55,7 +114,7 @@ class CartView extends GetView<CartController> {
       return Column(
         children: [
           SizedBox(
-            height: 450,
+            height: 608,
             child: Scrollbar(
               radius: Radius.circular(15),
               thickness: 5,
@@ -78,7 +137,7 @@ class CartView extends GetView<CartController> {
                       );
                     },
                     child: Container(
-                      height: 110,
+                      height: 125,
                       margin: const EdgeInsets.only(bottom: 10),
                       decoration: BoxDecoration(
                         color: Colors.white,
@@ -94,6 +153,24 @@ class CartView extends GetView<CartController> {
                       ),
                       child: Row(
                         children: [
+                          Obx(() {
+                            return Transform.scale(
+                              scale: 1.25,
+                              child: Checkbox(
+                                activeColor: AppTheme.primary,
+                                checkColor: Colors.white,
+                                side: BorderSide(
+                                  color: Colors.grey.shade400,
+                                  width: 2,
+                                ),
+                                shape: CircleBorder(),
+                                value: cartItem.isSelected.value,
+                                onChanged: (value) {
+                                  controller.toggleSelectItem(index);
+                                },
+                              ),
+                            );
+                          }),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: CachedNetworkImage(
@@ -177,10 +254,14 @@ class CartView extends GetView<CartController> {
                                     ),
                                     Container(
                                       width: 120,
-                                      height: 45,
+                                      height: 40,
+                                      margin: const EdgeInsets.only(right: 10),
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(15),
+                                        border: Border.all(
+                                          color: Colors.grey.shade200,
+                                        ),
                                       ),
                                       child: Row(
                                         mainAxisAlignment:
@@ -236,6 +317,227 @@ class CartView extends GetView<CartController> {
               ),
             ),
           ),
+          Spacer(),
+          Container(
+            width: double.infinity,
+            height: 55,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.grey.shade100),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.3),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(0, -0.1),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Row(
+                  children: [
+                    Transform.scale(
+                      scale: 1.25,
+                      child: Checkbox(
+                        activeColor: AppTheme.primary,
+                        checkColor: Colors.white,
+                        side: BorderSide(color: Colors.grey.shade400, width: 2),
+                        shape: CircleBorder(),
+                        value: controller.isAllSelected,
+                        onChanged: (value) {
+                          controller.toggleSelectAll(value ?? false);
+                        },
+                      ),
+                    ),
+                    Text(
+                      'Select all',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                Spacer(),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Total: ',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      TextSpan(
+                        text: NumberFormat.currency(
+                          symbol: '\$',
+                          decimalDigits: 2,
+                        ).format(controller.selectedTotal),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.success, // green price
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(width: 5),
+                SizedBox(
+                  width: 135,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.warning,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    child: Text(
+                      'Proceed (${controller.selectedCount})',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // SizedBox(height: 10),
+          // Container(
+          //   padding: const EdgeInsets.symmetric(horizontal: 16),
+          //   child: Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: [
+          //           Text(
+          //             'Subtotal :',
+          //             style: TextStyle(
+          //               fontSize: 18,
+          //               fontWeight: FontWeight.bold,
+          //               color: Colors.grey[500],
+          //             ),
+          //           ),
+          //           Obx(
+          //             () => Text(
+          //               NumberFormat.currency(
+          //                 symbol: '\$',
+          //                 decimalDigits: 2,
+          //               ).format(controller.subtotal),
+          //               style: TextStyle(
+          //                 fontSize: 18,
+          //                 fontWeight: FontWeight.bold,
+          //                 color: Colors.grey[500],
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //       SizedBox(height: 8),
+          //       Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: [
+          //           Text(
+          //             'Shipping : ',
+          //             style: TextStyle(
+          //               fontSize: 18,
+          //               fontWeight: FontWeight.bold,
+          //               color: Colors.grey[500],
+          //             ),
+          //           ),
+          //           Text(
+          //             NumberFormat.currency(
+          //               symbol: '\$',
+          //               decimalDigits: 2,
+          //             ).format(controller.shipping),
+          //             style: TextStyle(
+          //               fontSize: 18,
+          //               fontWeight: FontWeight.bold,
+          //               color: Colors.grey[500],
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //       SizedBox(height: 8),
+          //       Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: [
+          //           Text(
+          //             'Discount : ',
+          //             style: TextStyle(
+          //               fontSize: 18,
+          //               fontWeight: FontWeight.bold,
+          //               color: Colors.grey[500],
+          //             ),
+          //           ),
+          //           Text(
+          //             NumberFormat.currency(
+          //               symbol: '-\$\$',
+          //               decimalDigits: 2,
+          //             ).format(controller.discount),
+          //             style: TextStyle(
+          //               fontSize: 18,
+          //               fontWeight: FontWeight.bold,
+          //               color: AppTheme.danger,
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //       SizedBox(height: 8),
+          //       Divider(color: Colors.grey[400], thickness: 1),
+          //       Row(
+          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //         children: [
+          //           Text(
+          //             'Total : ',
+          //             style: TextStyle(
+          //               fontSize: 18,
+          //               fontWeight: FontWeight.bold,
+          //               color: Colors.black,
+          //             ),
+          //           ),
+          //           Obx(
+          //             () => Text(
+          //               NumberFormat.currency(
+          //                 symbol: '\$',
+          //                 decimalDigits: 2,
+          //               ).format(controller.total),
+          //               style: TextStyle(
+          //                 fontSize: 18,
+          //                 fontWeight: FontWeight.bold,
+          //                 color: Colors.black,
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          // SizedBox(height: 10),
+          // Container(
+          //   width: double.infinity,
+          //   margin: const EdgeInsets.symmetric(horizontal: 16),
+          //   child: ElevatedButton(
+          //     onPressed: () {},
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.center,
+          //       children: [
+          //         Icon(Icons.payment, size: 26),
+          //         SizedBox(width: 10),
+          //         Text('Proceed to Checkout'),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ],
       );
     });

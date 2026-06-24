@@ -28,7 +28,7 @@ class AdSplashView extends GetView<AdSplashController> {
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(15),
               ),
               alignment: Alignment.center,

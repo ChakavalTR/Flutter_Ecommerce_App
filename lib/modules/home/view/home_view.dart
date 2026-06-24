@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_ecommerce_app/config/routes/app_pages.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
 import 'package:flutter_ecommerce_app/modules/cart/controller/cart_controller.dart';
@@ -47,7 +48,19 @@ class HomeView extends GetView<HomeController> {
         final currentIndex = controller.currentIndex.value;
         final currentView = view[currentIndex];
         return Scaffold(
-          appBar: currentIndex == 0 ? _buildAppbar : null,
+          appBar: currentIndex == 0
+              ? PreferredSize(
+                  preferredSize: Size.fromHeight(kToolbarHeight),
+                  child: Obx(() {
+                    return AnimatedSwitcher(
+                      duration: Duration(milliseconds: 250),
+                      child: controller.isShowBars.value
+                          ? _buildAppbar
+                          : SizedBox.shrink(),
+                    );
+                  }),
+                )
+              : null,
           body: currentIndex == 0
               ? Obx(() {
                   if (controller.isRefreshing.value) {
@@ -63,7 +76,20 @@ class HomeView extends GetView<HomeController> {
                   );
                 })
               : currentView,
-          bottomNavigationBar: BottomNavigationBarWidget(),
+          bottomNavigationBar: Obx(() {
+            return ClipRect(
+              child: AnimatedSize(
+                duration: Duration(milliseconds: 250),
+                curve: Curves.easeInOut,
+                child: SizedBox(
+                  height: controller.isShowBars.value ? null : 0,
+                  child: controller.isShowBars.value
+                      ? BottomNavigationBarWidget()
+                      : SizedBox.shrink(),
+                ),
+              ),
+            );
+          }),
         );
       }),
     );

@@ -7,22 +7,16 @@ class CartModel {
   Color color;
   String? selectedStorage;
   RxInt quantity;
+  RxBool isSelected;
 
   CartModel({
     required this.product,
     required this.color,
     this.selectedStorage,
     int quantity = 1,
-  }) : quantity = quantity.obs;
-
-  Map<String, dynamic> toJson() {
-    return {
-      'product': product.toJson(),
-      'color': color.toARGB32(),
-      'selectedStorage': selectedStorage,
-      'quantity': quantity.value,
-    };
-  }
+    bool isSelected = false,
+  }) : quantity = quantity.obs,
+       isSelected = isSelected.obs;
 
   factory CartModel.fromJson(Map<String, dynamic> json) {
     return CartModel(
@@ -30,6 +24,17 @@ class CartModel {
       color: Color(json['color']),
       selectedStorage: json['selectedStorage'],
       quantity: json['quantity'],
+      isSelected: json['isSelected'] ?? false,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'product': product.toJson(),
+      'color': color.toARGB32(),
+      'selectedStorage': selectedStorage,
+      'quantity': quantity.value,
+      'isSelected': isSelected.value,
+    };
   }
 }

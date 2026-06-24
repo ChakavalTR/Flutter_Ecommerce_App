@@ -77,7 +77,7 @@ class CartController extends GetxController {
     cartItems.clear();
     Get.snackbar(
       'Success',
-      'Cart cleared',
+      'Cart cleared successfully',
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: Colors.red,
       colorText: Colors.white,
@@ -95,7 +95,7 @@ class CartController extends GetxController {
   }
 
   double get shipping => 0;
-  double get discount => cartItems.isEmpty ? 0 : 50;
+  double get discount => cartItems.isEmpty ? 0 : 0;
   double get total => subtotal + shipping - discount;
 
   //! Save Cart to Local Storage
@@ -114,5 +114,48 @@ class CartController extends GetxController {
     cartItems.value = cartData
         .map((e) => CartModel.fromJson(jsonDecode(e)))
         .toList();
+  }
+
+  //! Toggle Item Selection
+  void toggleSelectItem(int index) {
+    cartItems[index].isSelected.toggle();
+    saveCart();
+  }
+
+  //! Toggle Select All
+  void toggleSelectAll(bool value) {
+    for (var item in cartItems) {
+      item.isSelected.value = value;
+    }
+    saveCart();
+  }
+
+  //! Check if all items are selected
+  bool get isAllSelected {
+    return cartItems.isNotEmpty &&
+        cartItems.every((item) {
+          return item.isSelected.value;
+        });
+  }
+
+  //! Selected Total
+  double get selectedTotal {
+    double total = 0;
+    for (var item in cartItems) {
+      if (item.isSelected.value) {
+        total += item.product.price * item.quantity.value;
+      }
+    }
+    return total;
+  }
+
+  //! Selected Count
+  int get selectedCount {
+    return cartItems.where((item) => item.isSelected.value).length;
+  }
+
+  //! hasSelectedItems
+  bool get hasSelectedItems {
+    return cartItems.any((item) => item.isSelected.value);
   }
 }
