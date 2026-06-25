@@ -31,7 +31,9 @@ class BottomnavigationBarWidget extends GetView<DetailController> {
                                 .selectedStorage
                                 .value]
                           : null,
+                      quantity: detailController.quantity.value,
                     );
+                    detailController.quantity.value = 1;
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.yellow[600],

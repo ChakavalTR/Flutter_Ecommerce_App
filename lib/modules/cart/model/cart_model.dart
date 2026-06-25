@@ -8,6 +8,7 @@ class CartModel {
   String? selectedStorage;
   RxInt quantity;
   RxBool isSelected;
+  RxBool isEditingQty;
 
   CartModel({
     required this.product,
@@ -15,8 +16,10 @@ class CartModel {
     this.selectedStorage,
     int quantity = 1,
     bool isSelected = false,
+    bool isEditingQty = false,
   }) : quantity = quantity.obs,
-       isSelected = isSelected.obs;
+       isSelected = isSelected.obs,
+       isEditingQty = false.obs;
 
   factory CartModel.fromJson(Map<String, dynamic> json) {
     return CartModel(
@@ -25,6 +28,7 @@ class CartModel {
       selectedStorage: json['selectedStorage'],
       quantity: json['quantity'],
       isSelected: json['isSelected'] ?? false,
+      isEditingQty: json['isEditingQty'] ?? false,
     );
   }
 
@@ -35,6 +39,7 @@ class CartModel {
       'selectedStorage': selectedStorage,
       'quantity': quantity.value,
       'isSelected': isSelected.value,
+      'isEditingQty': isEditingQty.value,
     };
   }
 }

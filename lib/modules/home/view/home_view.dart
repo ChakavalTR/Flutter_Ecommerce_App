@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_ecommerce_app/config/routes/app_pages.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
 import 'package:flutter_ecommerce_app/modules/cart/controller/cart_controller.dart';
@@ -42,7 +41,7 @@ class HomeView extends GetView<HomeController> {
           _buildBody,
           CategoryView(),
           FavoriteView(),
-          CartView(),
+          CartView(isFromBottomTab: true),
           ProfileView(),
         ];
         final currentIndex = controller.currentIndex.value;

@@ -25,6 +25,7 @@ class CartController extends GetxController {
     required ProductModel product,
     required Color selectedColor,
     String? selectedStorage,
+    int quantity = 1,
   }) async {
     final index = cartItems.indexWhere((item) {
       return item.product.id == product.id &&
@@ -32,7 +33,7 @@ class CartController extends GetxController {
           item.selectedStorage == selectedStorage;
     });
     if (index != -1) {
-      cartItems[index].quantity.value++;
+      cartItems[index].quantity.value += quantity;
     } else {
       cartItems.insert(
         0,
@@ -40,6 +41,7 @@ class CartController extends GetxController {
           product: product,
           color: selectedColor,
           selectedStorage: selectedStorage,
+          quantity: quantity,
         ),
       );
     }
@@ -157,5 +159,22 @@ class CartController extends GetxController {
   //! hasSelectedItems
   bool get hasSelectedItems {
     return cartItems.any((item) => item.isSelected.value);
+  }
+
+  //! Update Quantity
+  void updateQuantity(int index, int quantity) {
+    if (quantity < 0) {
+      cartItems[index].quantity.value = 0;
+    } else {
+      cartItems[index].quantity.value = quantity;
+    }
+    saveCart();
+  }
+
+  //! Close Editing Quantity
+  void closeEditingQuantity() {
+    for (final item in cartItems) {
+      item.isEditingQty.value = false;
+    }
   }
 }

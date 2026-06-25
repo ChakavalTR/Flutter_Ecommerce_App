@@ -367,7 +367,7 @@ class DetailView extends GetView<DetailController> {
                             NumberFormat.currency(
                               symbol: '\$',
                               decimalDigits: 2,
-                            ).format(controller.product.newPrice),
+                            ).format(controller.product.price),
                             style: TextStyle(
                               fontSize: 26,
                               fontWeight: FontWeight.bold,
@@ -379,7 +379,7 @@ class DetailView extends GetView<DetailController> {
                             NumberFormat.currency(
                               symbol: '\$',
                               decimalDigits: 2,
-                            ).format(controller.product.price),
+                            ).format(controller.product.newPrice),
                             style: TextStyle(
                               fontSize: 20,
                               color: Colors.grey,
@@ -430,27 +430,79 @@ class DetailView extends GetView<DetailController> {
                   ),
                 ),
                 SizedBox(height: 1),
-                Obx(() {
-                  return Row(
-                    children: List.generate(controller.colorsOption.length, (
-                      index,
-                    ) {
-                      return GestureDetector(
-                        onTap: () {
-                          controller.changeColor(index);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 10, left: 5),
-                          child: ColorOptionWidget(
-                            color: controller.colorsOption[index],
-                            isSelected:
-                                controller.selectedColors.value == index,
-                          ),
+                Row(
+                  children: [
+                    Obx(() {
+                      return Row(
+                        children: List.generate(
+                          controller.colorsOption.length,
+                          (index) {
+                            return GestureDetector(
+                              onTap: () {
+                                controller.changeColor(index);
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                  right: 10,
+                                  left: 5,
+                                ),
+                                child: ColorOptionWidget(
+                                  color: controller.colorsOption[index],
+                                  isSelected:
+                                      controller.selectedColors.value == index,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       );
                     }),
-                  );
-                }),
+                    Spacer(),
+                    Container(
+                      width: 120,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: Colors.grey.shade200),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              controller.decreaseQuantity();
+                            },
+                            icon: Icon(
+                              Icons.remove,
+                              color: Colors.red,
+                              size: 24,
+                            ),
+                          ),
+                          Obx(
+                            () => Text(
+                              controller.quantity.value.toString(),
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              controller.increaseQuantity();
+                            },
+                            icon: Icon(
+                              Icons.add,
+                              color: Colors.green,
+                              size: 24,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 SizedBox(height: 5),
                 Container(
                   width: double.infinity,
