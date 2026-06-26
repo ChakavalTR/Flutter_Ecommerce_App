@@ -5,6 +5,8 @@ import 'package:flutter_ecommerce_app/modules/cart/binding/cart_binding.dart';
 import 'package:flutter_ecommerce_app/modules/cart/view/cart_view.dart';
 import 'package:flutter_ecommerce_app/modules/category/binding/category_binding.dart';
 import 'package:flutter_ecommerce_app/modules/category/view/category_view.dart';
+import 'package:flutter_ecommerce_app/modules/checkout/binding/checkout_binding.dart';
+import 'package:flutter_ecommerce_app/modules/checkout/view/checkout_view.dart';
 import 'package:flutter_ecommerce_app/modules/detail/binding/detail_binding.dart';
 import 'package:flutter_ecommerce_app/modules/detail/view/detail_view.dart';
 import 'package:flutter_ecommerce_app/modules/home/view/home_view.dart';
@@ -55,6 +57,13 @@ class AppRouting {
           name: "/${e.name}",
           page: () => CartView(),
           binding: CartBinding(),
+          transition: Transition.native,
+        );
+      case RouteView.checkout:
+        return GetPage(
+          name: "/${e.name}",
+          page: () => CheckoutView(),
+          binding: CheckoutBinding(),
           transition: Transition.native,
         );
     }

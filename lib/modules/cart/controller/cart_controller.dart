@@ -68,8 +68,6 @@ class CartController extends GetxController {
   void decreaseQuantity(int index) {
     if (cartItems[index].quantity.value > 1) {
       cartItems[index].quantity.value--;
-    } else {
-      cartItems.removeAt(index);
     }
     saveCart();
   }
@@ -84,6 +82,9 @@ class CartController extends GetxController {
       backgroundColor: Colors.red,
       colorText: Colors.white,
     );
+    Future.delayed(const Duration(milliseconds: 800), () {
+      Get.closeCurrentSnackbar();
+    });
     saveCart();
   }
 
@@ -176,5 +177,26 @@ class CartController extends GetxController {
     for (final item in cartItems) {
       item.isEditingQty.value = false;
     }
+  }
+
+  //! Remove Item
+  void removeItem(int index) {
+    cartItems.removeAt(index);
+    Get.snackbar(
+      'Success',
+      'Item removed from cart',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.green,
+      colorText: Colors.white,
+    );
+    Future.delayed(Duration(milliseconds: 800), () {
+      Get.closeCurrentSnackbar();
+    });
+    saveCart();
+  }
+
+  //! Get Selected Items
+  List<CartModel> get selectedItems {
+    return cartItems.where((item) => item.isSelected.value).toList();
   }
 }

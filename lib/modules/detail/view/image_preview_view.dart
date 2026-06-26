@@ -51,6 +51,30 @@ class ImagePreviewView extends GetView<DetailController> {
               ),
             ),
             Positioned(
+              top: 75,
+              right: 10,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[700]?.withOpacity(0.3),
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  onPressed: () {
+                    controller.saveImage(
+                      controller.productImages[controller
+                          .currentImageIndex
+                          .value],
+                    );
+                  },
+                  icon: Icon(
+                    Icons.download_rounded,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
               bottom: 30,
               left: 190,
               child: Obx(() {

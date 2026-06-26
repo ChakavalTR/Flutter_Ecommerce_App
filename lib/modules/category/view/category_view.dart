@@ -79,7 +79,7 @@ class CategoryView extends GetView<CategoryController> {
                   child: Scrollbar(
                     controller: scrollController,
                     radius: Radius.circular(15),
-                    thickness: 7,
+                    thickness: 5,
                     child: RefreshIndicator(
                       onRefresh: controller.refreshCategoryProduct,
                       backgroundColor: Colors.white,

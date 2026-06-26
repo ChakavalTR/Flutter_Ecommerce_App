@@ -54,7 +54,7 @@ class FavoriteView extends StatelessWidget {
       return Scrollbar(
         controller: scrollController,
         radius: Radius.circular(15),
-        thickness: 7,
+        thickness: 5,
         child: Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
           child: RefreshIndicator(

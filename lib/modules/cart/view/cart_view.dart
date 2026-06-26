@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/config/routes/app_pages.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
+import 'package:flutter_ecommerce_app/modules/cart/widgets/cart_bottom_bar_widget.dart';
 import 'package:flutter_ecommerce_app/modules/detail/controller/detail_controller.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:flutter_ecommerce_app/modules/cart/controller/cart_controller.dart';
 import 'package:intl/intl.dart';
@@ -20,7 +22,7 @@ class CartView extends GetView<CartController> {
         padding: EdgeInsets.only(
           bottom: isFromBottomTab ? 0 : kBottomNavigationBarHeight,
         ),
-        child: _buildTotalBar,
+        child: CartBottomBarWidget(),
       ),
     );
   }
@@ -139,226 +141,273 @@ class CartView extends GetView<CartController> {
                   itemCount: controller.cartItems.length,
                   itemBuilder: (context, index) {
                     final cartItem = controller.cartItems[index];
-                    return GestureDetector(
-                      onTap: () {
-                        controller.closeEditingQuantity();
-                        if (Get.isRegistered<DetailController>()) {
-                          Get.delete<DetailController>();
-                        }
-                        RouteView.detail.go(arguments: cartItem.product);
-                      },
-                      child: Container(
-                        height: 125,
-                        margin: const EdgeInsets.only(bottom: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.3),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            Obx(() {
-                              return Transform.scale(
-                                scale: 1.25,
-                                child: Checkbox(
-                                  activeColor: AppTheme.primary,
-                                  checkColor: Colors.white,
-                                  side: BorderSide(
-                                    color: Colors.grey.shade400,
-                                    width: 2,
+                    return Slidable(
+                      key: ValueKey(cartItem.product.id),
+                      endActionPane: ActionPane(
+                        motion: StretchMotion(),
+                        extentRatio: 0.25,
+                        children: [
+                          SlidableAction(
+                            onPressed: (context) {
+                              controller.removeItem(index);
+                            },
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            icon: Icons.delete,
+                            label: 'Delete',
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ],
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          if (cartItem.isEditingQty.value ||
+                              cartItem.isInputQty.value) {
+                            return;
+                          }
+                          controller.closeEditingQuantity();
+                          if (Get.isRegistered<DetailController>()) {
+                            Get.delete<DetailController>();
+                          }
+                          RouteView.detail.go(arguments: cartItem.product);
+                        },
+                        child: Container(
+                          height: 125,
+                          margin: const EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.3),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Obx(() {
+                                return Transform.scale(
+                                  scale: 1.25,
+                                  child: Checkbox(
+                                    activeColor: AppTheme.primary,
+                                    checkColor: Colors.white,
+                                    side: BorderSide(
+                                      color: Colors.grey.shade400,
+                                      width: 2,
+                                    ),
+                                    shape: CircleBorder(),
+                                    value: cartItem.isSelected.value,
+                                    onChanged: (value) {
+                                      controller.toggleSelectItem(index);
+                                    },
                                   ),
-                                  shape: CircleBorder(),
-                                  value: cartItem.isSelected.value,
-                                  onChanged: (value) {
-                                    controller.toggleSelectItem(index);
-                                  },
-                                ),
-                              );
-                            }),
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: CachedNetworkImage(
-                                imageUrl: cartItem.product.image,
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => Container(
+                                );
+                              }),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: CachedNetworkImage(
+                                  imageUrl: cartItem.product.image,
                                   width: 100,
                                   height: 100,
-                                  color: Colors.grey[300],
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation(
-                                        AppTheme.primary,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => Container(
+                                    width: 100,
+                                    height: 100,
+                                    color: Colors.grey[300],
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        valueColor: AlwaysStoppedAnimation(
+                                          AppTheme.primary,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                errorWidget: (context, url, error) => Container(
-                                  width: 100,
-                                  height: 100,
-                                  color: Colors.grey[300],
-                                  child: Center(
-                                    child: Icon(Icons.error, color: Colors.red),
-                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                        width: 100,
+                                        height: 100,
+                                        color: Colors.grey[300],
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.error,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ),
                                 ),
                               ),
-                            ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    cartItem.product.title,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      cartItem.product.title,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: 8),
-                                  Row(
-                                    children: [
-                                      Container(
-                                        width: 30,
-                                        height: 14,
-                                        decoration: BoxDecoration(
-                                          color: cartItem.color,
-                                          shape: BoxShape.rectangle,
-                                          border: Border.all(
-                                            color: Colors.grey,
+                                    SizedBox(height: 8),
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 30,
+                                          height: 14,
+                                          decoration: BoxDecoration(
+                                            color: cartItem.color,
+                                            shape: BoxShape.rectangle,
+                                            border: Border.all(
+                                              color: Colors.grey,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      if (cartItem.selectedStorage != null) ...[
-                                        SizedBox(width: 8),
-                                        Text(
-                                          cartItem.selectedStorage!,
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.grey,
+                                        if (cartItem.selectedStorage !=
+                                            null) ...[
+                                          SizedBox(width: 8),
+                                          Text(
+                                            cartItem.selectedStorage!,
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey,
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ],
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        NumberFormat.currency(
-                                          symbol: '\$',
-                                          decimalDigits: 2,
-                                        ).format(cartItem.product.price),
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          color: AppTheme.success,
-                                          fontWeight: FontWeight.bold,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          NumberFormat.currency(
+                                            symbol: '\$',
+                                            decimalDigits: 2,
+                                          ).format(cartItem.product.price),
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                            color: AppTheme.success,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
-                                      Obx(() {
-                                        if (!cartItem.isEditingQty.value) {
+                                        Obx(() {
+                                          if (!cartItem.isEditingQty.value) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                cartItem.isEditingQty.value =
+                                                    true;
+                                              },
+                                              child: Container(
+                                                width: 55,
+                                                height: 36,
+                                                margin: EdgeInsets.only(
+                                                  right: 10,
+                                                ),
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  border: Border.all(
+                                                    color: Colors.grey.shade200,
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  'x${cartItem.quantity.value}',
+                                                  style: const TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }
                                           return GestureDetector(
                                             onTap: () {
-                                              controller.closeEditingQuantity();
                                               cartItem.isEditingQty.value =
                                                   true;
                                             },
+                                            behavior:
+                                                HitTestBehavior.translucent,
                                             child: Container(
-                                              width: 55,
-                                              height: 36,
+                                              width: 120,
+                                              height: 40,
                                               margin: const EdgeInsets.only(
                                                 right: 10,
                                               ),
-                                              alignment: Alignment.center,
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 borderRadius:
-                                                    BorderRadius.circular(12),
+                                                    BorderRadius.circular(15),
                                                 border: Border.all(
                                                   color: Colors.grey.shade200,
                                                 ),
                                               ),
-                                              child: Text(
-                                                'x${cartItem.quantity.value}',
-                                                style: const TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      if (cartItem
+                                                              .quantity
+                                                              .value >
+                                                          1) {
+                                                        controller
+                                                            .decreaseQuantity(
+                                                              index,
+                                                            );
+                                                      }
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.remove,
+                                                      color:
+                                                          cartItem
+                                                                  .quantity
+                                                                  .value >
+                                                              1
+                                                          ? Colors.red
+                                                          : Colors.grey,
+                                                      size: 22,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    '${cartItem.quantity.value}',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  IconButton(
+                                                    onPressed: () {
+                                                      controller
+                                                          .increaseQuantity(
+                                                            index,
+                                                          );
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.add,
+                                                      color: Colors.green,
+                                                      size: 22,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           );
-                                        }
-                                        return Container(
-                                          width: 120,
-                                          height: 40,
-                                          margin: const EdgeInsets.only(
-                                            right: 10,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.circular(
-                                              15,
-                                            ),
-                                            border: Border.all(
-                                              color: Colors.grey.shade200,
-                                            ),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              IconButton(
-                                                onPressed: () {
-                                                  controller.decreaseQuantity(
-                                                    index,
-                                                  );
-                                                },
-                                                icon: const Icon(
-                                                  Icons.remove,
-                                                  color: Colors.red,
-                                                  size: 22,
-                                                ),
-                                              ),
-                                              Text(
-                                                cartItem.quantity.value
-                                                    .toString(),
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                              IconButton(
-                                                onPressed: () {
-                                                  controller.increaseQuantity(
-                                                    index,
-                                                  );
-                                                },
-                                                icon: const Icon(
-                                                  Icons.add,
-                                                  color: Colors.green,
-                                                  size: 22,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      }),
-                                    ],
-                                  ),
-                                ],
+                                        }),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     );
@@ -497,100 +546,6 @@ class CartView extends GetView<CartController> {
           //   ),
           // ),
         ],
-      );
-    });
-  }
-
-  //! Build Navigation Bottom Bar (Total and Proceed Button)
-  Widget get _buildTotalBar {
-    return Obx(() {
-      if (controller.cartItems.isEmpty) {
-        return SizedBox.shrink();
-      }
-      return Container(
-        width: double.infinity,
-        height: 55,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.grey.shade100),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: Offset(0, -0.1),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Row(
-              children: [
-                Transform.scale(
-                  scale: 1.25,
-                  child: Checkbox(
-                    activeColor: AppTheme.primary,
-                    checkColor: Colors.white,
-                    side: BorderSide(color: Colors.grey.shade400, width: 2),
-                    shape: CircleBorder(),
-                    value: controller.isAllSelected,
-                    onChanged: (value) {
-                      controller.toggleSelectAll(value ?? false);
-                    },
-                  ),
-                ),
-                Text(
-                  'Select all',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            Spacer(),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Total: ',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  TextSpan(
-                    text: NumberFormat.currency(
-                      symbol: '\$',
-                      decimalDigits: 2,
-                    ).format(controller.selectedTotal),
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.success, // green price
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(width: 5),
-            SizedBox(
-              width: 135,
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.warning,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-                child: Text(
-                  'Proceed (${controller.selectedCount})',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-          ],
-        ),
       );
     });
   }

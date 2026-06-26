@@ -22,6 +22,7 @@ class DetailController extends GetxController {
   final quantity = 1.obs;
   var isLoading = false.obs;
   final currentImageIndex = 0.obs;
+  final TextEditingController qtyController = TextEditingController(text: '1');
   //-------------------------------------------
   //* Lifecycle Section *\\
   @override
@@ -49,12 +50,16 @@ class DetailController extends GetxController {
 
   //! On Quantity Change
   void increaseQuantity() {
-    quantity.value++;
+    if (quantity.value < 99) {
+      quantity.value++;
+      qtyController.text = quantity.value.toString();
+    }
   }
 
   void decreaseQuantity() {
     if (quantity.value > 1) {
       quantity.value--;
+      qtyController.text = quantity.value.toString();
     }
   }
 
@@ -121,6 +126,11 @@ class DetailController extends GetxController {
         backgroundColor: AppTheme.success,
         colorText: Colors.white,
       );
+      Future.delayed(Duration(milliseconds: 800), () {
+        if (Get.isSnackbarOpen) {
+          Get.closeCurrentSnackbar();
+        }
+      });
     } catch (e) {
       if (Get.isDialogOpen ?? false) {
         Get.back();

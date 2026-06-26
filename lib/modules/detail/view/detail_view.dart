@@ -469,23 +469,48 @@ class DetailView extends GetView<DetailController> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          IconButton(
-                            onPressed: () {
-                              controller.decreaseQuantity();
-                            },
-                            icon: Icon(
-                              Icons.remove,
-                              color: Colors.red,
-                              size: 24,
-                            ),
-                          ),
-                          Obx(
-                            () => Text(
-                              controller.quantity.value.toString(),
+                          Obx(() {
+                            final canDecrease = controller.quantity.value > 1;
+                            return IconButton(
+                              onPressed: canDecrease
+                                  ? () {
+                                      controller.decreaseQuantity();
+                                    }
+                                  : null,
+                              icon: Icon(
+                                Icons.remove,
+                                color: canDecrease ? Colors.red : Colors.grey,
+                                size: 24,
+                              ),
+                            );
+                          }),
+                          Expanded(
+                            child: TextFormField(
+                              controller: controller.qtyController,
+                              textAlign: TextAlign.center,
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                fillColor: Colors.transparent,
+                                contentPadding: EdgeInsets.zero,
+                              ),
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
+                              onChanged: (value) {
+                                final qty = int.tryParse(value.trim());
+                                if (qty != null && qty > 0) {
+                                  controller.quantity.value = qty;
+                                }
+                              },
+                              onEditingComplete: () {
+                                if (controller.qtyController.text.isEmpty ||
+                                    controller.qtyController.text == '0') {
+                                  controller.quantity.value = 1;
+                                  controller.qtyController.text = '1';
+                                }
+                                FocusManager.instance.primaryFocus?.unfocus();
+                              },
                             ),
                           ),
                           IconButton(

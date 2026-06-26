@@ -9,6 +9,7 @@ class CartModel {
   RxInt quantity;
   RxBool isSelected;
   RxBool isEditingQty;
+  RxBool isInputQty;
 
   CartModel({
     required this.product,
@@ -19,7 +20,8 @@ class CartModel {
     bool isEditingQty = false,
   }) : quantity = quantity.obs,
        isSelected = isSelected.obs,
-       isEditingQty = false.obs;
+       isEditingQty = false.obs,
+       isInputQty = false.obs;
 
   factory CartModel.fromJson(Map<String, dynamic> json) {
     return CartModel(
