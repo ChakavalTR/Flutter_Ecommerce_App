@@ -199,4 +199,11 @@ class CartController extends GetxController {
   List<CartModel> get selectedItems {
     return cartItems.where((item) => item.isSelected.value).toList();
   }
+
+  //! Refresh Cart
+  Future<void> refreshCart() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    loadCart();
+    closeEditingQuantity();
+  }
 }

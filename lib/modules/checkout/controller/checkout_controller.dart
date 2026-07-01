@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 class CheckoutController extends GetxController {
   //* Variables Section *\\
   late final List<CartModel> checkoutItems;
+  final selectdShipping = 0.obs;
   //-------------------------------------------
   //* Lifecycle Section *\\
   @override
@@ -14,4 +15,12 @@ class CheckoutController extends GetxController {
 
   //-------------------------------------------
   //* Functions Section*\\
+  //! Select Shipping Method
+  void selectShippingMethod(int index) {
+    selectdShipping.value = index;
+  }
+
+  double get shippingFee {
+    return selectdShipping.value == 0 ? 0 : 9.99;
+  }
 }

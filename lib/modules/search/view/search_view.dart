@@ -63,42 +63,29 @@ class SearchView extends GetView<SearchProductController> {
             child: SearchWidget(),
           ),
         ),
-        SliverToBoxAdapter(child: RecentSearchWidget()),
-        SliverToBoxAdapter(child: SizedBox(height: 12)),
         Obx(() {
-          if (controller.isTyping.value && controller.searchProducts.isEmpty) {
+          if (!controller.isTyping.value) {
+            return SliverToBoxAdapter(child: RecentSearchWidget());
+          }
+          if (!controller.isSuggestionSelected.value &&
+              controller.suggestions.isNotEmpty) {
             return SliverToBoxAdapter(
-              child: Padding(
-                padding: EdgeInsets.only(top: 80),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.search_off_rounded,
-                      size: 60,
-                      color: AppTheme.greyText.withOpacity(0.5),
+              child: Column(
+                children: controller.suggestions.map((item) {
+                  return ListTile(
+                    leading: Icon(Icons.search, color: Colors.grey),
+                    title: Text(
+                      item,
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    Text(
-                      'No products found',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.greyText.withOpacity(0.7),
-                      ),
-                    ),
-                    Text(
-                      'Try searching for something else',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppTheme.greyText.withOpacity(0.7),
-                      ),
-                    ),
-                  ],
-                ),
+                    trailing: Icon(Icons.north_west, color: Colors.grey),
+                    onTap: () {
+                      controller.selectSuggestion(item);
+                    },
+                  );
+                }).toList(),
               ),
             );
-          }
-          if (controller.searchProducts.isEmpty) {
-            return SliverToBoxAdapter(child: SizedBox.shrink());
           }
           return SliverToBoxAdapter(
             child: SearchResultWidget(products: controller.searchProducts),

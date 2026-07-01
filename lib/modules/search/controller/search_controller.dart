@@ -17,6 +17,8 @@ class SearchProductController extends GetxController {
   static const recentSearchKey = 'recent_searches';
   final homeController = Get.find<HomeController>();
   final searchProducts = <ProductModel>[].obs;
+  final suggestions = <String>[].obs;
+  final isSuggestionSelected = false.obs;
   //-------------------------------------------
   //* Lifecycle Section *\\
   @override
@@ -36,14 +38,45 @@ class SearchProductController extends GetxController {
   //* Functions Section*\\
   //! On Search Text Change
   void onSearchChange(String value) {
+    final keyword = value.trim().toLowerCase();
     isTyping.value = value.trim().isNotEmpty;
+    isSuggestionSelected.value = false;
+    searchProducts.clear();
+    if (keyword.isEmpty) {
+      suggestions.clear();
+      return;
+    }
+    final allSuggestions = homeController.products
+        .map((element) => element.title)
+        .toSet()
+        .toList();
+    suggestions.value = allSuggestions
+        .where((suggestion) {
+          return suggestion.toLowerCase().contains(keyword);
+        })
+        .take(8)
+        .toList();
   }
 
   //! Clear Search
   void clearSearch() {
     searchController.clear();
     isTyping.value = false;
+    isSuggestionSelected.value = false;
     searchProducts.clear();
+    suggestions.clear();
+  }
+
+  //! Select Suggestion
+  void selectSuggestion(String value) {
+    searchController.text = value;
+    searchController.selection = TextSelection.fromPosition(
+      TextPosition(offset: searchController.text.length),
+    );
+    isSuggestionSelected.value = true;
+    suggestions.clear();
+    addRecentSearch(value);
+    onSearch(value);
   }
 
   //! Start Listening

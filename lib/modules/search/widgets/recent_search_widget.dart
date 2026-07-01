@@ -69,44 +69,52 @@ class RecentSearchWidget extends GetView<SearchProductController> {
                 spacing: 10,
                 runSpacing: 10,
                 children: displaySearches.map((item) {
-                  return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(
-                        color: AppTheme.darkBg.withOpacity(0.12),
+                  return GestureDetector(
+                    onTap: () {
+                      controller.selectSuggestion(item);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 7,
                       ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.history,
-                          size: 18,
-                          color: AppTheme.darkBg.withOpacity(0.45),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: AppTheme.darkBg.withOpacity(0.12),
                         ),
-                        SizedBox(width: 8),
-                        Text(
-                          item,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: AppTheme.darkBg.withOpacity(0.7),
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        GestureDetector(
-                          onTap: () {
-                            controller.removeRecentSearch(item);
-                          },
-                          child: Icon(
-                            Icons.close,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.history,
                             size: 18,
                             color: AppTheme.darkBg.withOpacity(0.45),
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 8),
+                          Text(
+                            item,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: AppTheme.darkBg.withOpacity(0.7),
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          GestureDetector(
+                            onTap: () {
+                              controller.removeRecentSearch(item);
+                            },
+                            child: Icon(
+                              Icons.close,
+                              size: 18,
+                              color: AppTheme.darkBg.withOpacity(0.45),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 }).toList(),
