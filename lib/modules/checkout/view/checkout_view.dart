@@ -3,13 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/controller/checkout_controller.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class CheckoutView extends GetView<CheckoutController> {
   const CheckoutView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: _buildAppBar(), body: _buildBody());
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        behavior: HitTestBehavior.opaque,
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
+          padding: EdgeInsets.only(bottom: 50),
+          child: _buildBody(),
+        ),
+      ),
+    );
   }
 
   //! Build AppBar
@@ -28,7 +44,8 @@ class CheckoutView extends GetView<CheckoutController> {
     final items = controller.checkoutItems;
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, top: 5),
-      child: ListView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           // Shipping Address Section
           Container(
@@ -131,10 +148,11 @@ class CheckoutView extends GetView<CheckoutController> {
             ),
           ),
 
-          SizedBox(height: 8),
           // Payment Method Section
+          SizedBox(height: 8),
           Container(
             width: double.infinity,
+            padding: EdgeInsets.only(bottom: 10),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(15),
@@ -230,7 +248,10 @@ class CheckoutView extends GetView<CheckoutController> {
                                     ],
                                   ),
                                   Text(
-                                    '\$${item.product.price}',
+                                    NumberFormat.currency(
+                                      symbol: '\$',
+                                      decimalDigits: 2,
+                                    ).format(item.product.price),
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -281,7 +302,7 @@ class CheckoutView extends GetView<CheckoutController> {
           Obx(() {
             return Container(
               width: double.infinity,
-              height: 155,
+              padding: EdgeInsets.only(bottom: 10),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(15),
@@ -317,14 +338,15 @@ class CheckoutView extends GetView<CheckoutController> {
                     },
                     child: Container(
                       width: double.infinity,
+                      height: 55,
                       margin: EdgeInsets.symmetric(horizontal: 10),
                       decoration: BoxDecoration(
-                        color: controller.selectdShipping.value == 0
+                        color: controller.selectedShipping.value == 0
                             ? AppTheme.primary.withOpacity(0.1)
                             : Colors.white,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                          color: controller.selectdShipping.value == 0
+                          color: controller.selectedShipping.value == 0
                               ? AppTheme.primary
                               : Colors.grey.shade300,
                         ),
@@ -341,6 +363,7 @@ class CheckoutView extends GetView<CheckoutController> {
                             SizedBox(width: 10),
                             Expanded(
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
@@ -379,14 +402,15 @@ class CheckoutView extends GetView<CheckoutController> {
                     },
                     child: Container(
                       width: double.infinity,
+                      height: 55,
                       margin: EdgeInsets.symmetric(horizontal: 10),
                       decoration: BoxDecoration(
-                        color: controller.selectdShipping.value == 1
+                        color: controller.selectedShipping.value == 1
                             ? AppTheme.primary.withOpacity(0.1)
                             : Colors.white,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(
-                          color: controller.selectdShipping.value == 1
+                          color: controller.selectedShipping.value == 1
                               ? AppTheme.primary
                               : Colors.grey.shade300,
                         ),
@@ -403,6 +427,7 @@ class CheckoutView extends GetView<CheckoutController> {
                             SizedBox(width: 10),
                             Expanded(
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
@@ -438,6 +463,215 @@ class CheckoutView extends GetView<CheckoutController> {
               ),
             );
           }),
+
+          //Payment Method Section
+          SizedBox(height: 8),
+          Obx(() {
+            return Container(
+              width: double.infinity,
+              padding: EdgeInsets.only(bottom: 10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 1,
+                    blurRadius: 2,
+                    offset: Offset(0, 1),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+                    child: Text(
+                      'Payment Method',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      controller.selectedPaymentMethod.value = 0;
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 55,
+                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: controller.selectedPaymentMethod.value == 0
+                            ? AppTheme.primary.withOpacity(0.1)
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: controller.selectedPaymentMethod.value == 0
+                              ? AppTheme.primary
+                              : Colors.grey.shade300,
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.credit_card,
+                              size: 28,
+                              color: Colors.blue,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              'Credit / Debit Card',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Spacer(),
+                            ...List.generate(
+                              controller.creditCardImages.length,
+                              (index) {
+                                return Container(
+                                  width: 35,
+                                  height: 30,
+                                  margin: EdgeInsets.only(right: 5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Image.asset(
+                                    controller.creditCardImages[index],
+                                    fit: BoxFit.contain,
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      controller.selectedPaymentMethod.value = 1;
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 55,
+                      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: controller.selectedPaymentMethod.value == 1
+                            ? AppTheme.primary.withOpacity(0.1)
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: controller.selectedPaymentMethod.value == 1
+                              ? AppTheme.primary
+                              : Colors.grey.shade300,
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.local_atm,
+                              size: 28,
+                              color: Colors.green,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              'Cash on Delivery',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+
+          // Promo Code Section
+          SizedBox(height: 8),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 2,
+                  offset: Offset(0, 1),
+                ),
+              ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Promo Code',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: 'Enter promo code',
+                          filled: true,
+                          fillColor: Colors.white,
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 14,
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                              width: 1.2,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide: BorderSide(
+                              color: AppTheme.primary,
+                              width: 1.2,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        'Apply',
+                        style: TextStyle(
+                          color: AppTheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

@@ -4,7 +4,12 @@ import 'package:get/get.dart';
 class CheckoutController extends GetxController {
   //* Variables Section *\\
   late final List<CartModel> checkoutItems;
-  final selectdShipping = 0.obs;
+  final selectedShipping = 0.obs;
+  final selectedPaymentMethod = 0.obs;
+  final List<String> creditCardImages = [
+    'assets/icons/visa_icon.png',
+    'assets/icons/mastercard_icon.png',
+  ];
   //-------------------------------------------
   //* Lifecycle Section *\\
   @override
@@ -17,10 +22,15 @@ class CheckoutController extends GetxController {
   //* Functions Section*\\
   //! Select Shipping Method
   void selectShippingMethod(int index) {
-    selectdShipping.value = index;
+    selectedShipping.value = index;
+  }
+
+  //! Select Payment Method
+  void selectPaymentMethod(int index) {
+    selectedPaymentMethod.value = index;
   }
 
   double get shippingFee {
-    return selectdShipping.value == 0 ? 0 : 9.99;
+    return selectedShipping.value == 0 ? 0 : 9.99;
   }
 }
