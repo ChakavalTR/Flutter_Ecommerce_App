@@ -12,7 +12,6 @@ class FavoriteView extends StatelessWidget {
   FavoriteView({super.key});
   final favoriteController = Get.find<FavoriteController>();
   final categoryController = Get.find<CategoryController>();
-  final scrollController = Get.find<HomeController>().favoriteScrollController;
   final homeController = Get.find<HomeController>();
   @override
   Widget build(BuildContext context) {
@@ -51,117 +50,111 @@ class FavoriteView extends StatelessWidget {
           ),
         );
       }
-      return Scrollbar(
-        controller: scrollController,
-        radius: Radius.circular(15),
-        thickness: 5,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
-          child: RefreshIndicator(
-            onRefresh: categoryController.refreshCategoryProduct,
-            backgroundColor: Colors.white,
-            color: AppTheme.primary,
-            child: ListView.builder(
-              controller: scrollController,
-              itemCount: favoriteProducts.length,
-              itemBuilder: (context, index) {
-                final product = favoriteProducts[index];
-                return GestureDetector(
-                  onTap: () {
-                    RouteView.detail.go(arguments: product);
-                  },
-                  child: Container(
-                    height: 110,
-                    margin: EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.08),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: CachedNetworkImage(
-                            imageUrl: product.image,
+      return Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10, top: 5),
+        child: RefreshIndicator(
+          onRefresh: categoryController.refreshCategoryProduct,
+          backgroundColor: Colors.white,
+          color: AppTheme.primary,
+          child: ListView.builder(
+            itemCount: favoriteProducts.length,
+            itemBuilder: (context, index) {
+              final product = favoriteProducts[index];
+              return GestureDetector(
+                onTap: () {
+                  RouteView.detail.go(arguments: product);
+                },
+                child: Container(
+                  height: 110,
+                  margin: EdgeInsets.only(bottom: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: CachedNetworkImage(
+                          imageUrl: product.image,
+                          width: 110,
+                          height: 110,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Container(
                             width: 110,
                             height: 110,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Container(
-                              width: 110,
-                              height: 110,
-                              color: Colors.grey[300],
-                              child: Center(
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation(
-                                    AppTheme.primary,
-                                  ),
+                            color: Colors.grey[300],
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(
+                                  AppTheme.primary,
                                 ),
                               ),
                             ),
-                            errorWidget: (context, url, error) => Container(
-                              width: 110,
-                              height: 110,
-                              color: Colors.grey[300],
-                              child: Center(
-                                child: Icon(Icons.error, color: Colors.red),
-                              ),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            width: 110,
+                            height: 110,
+                            color: Colors.grey[300],
+                            child: Center(
+                              child: Icon(Icons.error, color: Colors.red),
                             ),
                           ),
                         ),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                product.title,
-                                style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                "${product.category} | ${product.brand}",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                              SizedBox(height: 10),
-                            ],
-                          ),
-                        ),
-                        Column(
+                      ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              margin: EdgeInsets.only(right: 10),
-                              child: IconButton(
-                                onPressed: () {
-                                  favoriteController.toggleFavoriteStatus(
-                                    product.id,
-                                  );
-                                },
-                                icon: Icon(Icons.favorite),
-                                color: AppTheme.danger,
+                            Text(
+                              product.title,
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
+                            Text(
+                              "${product.category} | ${product.brand}",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                            SizedBox(height: 10),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(right: 10),
+                            child: IconButton(
+                              onPressed: () {
+                                favoriteController.toggleFavoriteStatus(
+                                  product.id,
+                                );
+                              },
+                              icon: Icon(Icons.favorite),
+                              color: AppTheme.danger,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
         ),
       );

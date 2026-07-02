@@ -19,12 +19,14 @@ class SearchProductController extends GetxController {
   final searchProducts = <ProductModel>[].obs;
   final suggestions = <String>[].obs;
   final isSuggestionSelected = false.obs;
+  final scrollController = ScrollController();
   //-------------------------------------------
   //* Lifecycle Section *\\
   @override
   void onClose() {
     searchController.dispose();
     speechToText.stop();
+    scrollController.dispose();
     super.onClose();
   }
 
@@ -54,7 +56,7 @@ class SearchProductController extends GetxController {
         .where((suggestion) {
           return suggestion.toLowerCase().contains(keyword);
         })
-        .take(8)
+        .take(allSuggestions.length)
         .toList();
   }
 

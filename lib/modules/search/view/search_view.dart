@@ -87,6 +87,24 @@ class SearchView extends GetView<SearchProductController> {
               ),
             );
           }
+          if (!controller.isSuggestionSelected.value &&
+              controller.suggestions.isEmpty) {
+            return SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  Icon(Icons.search_off, size: 80, color: Colors.grey),
+                  Text(
+                    'No results found (${controller.searchController.text}) ',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  Text(
+                    'Try searching for something else',
+                    style: TextStyle(color: Colors.grey, fontSize: 15),
+                  ),
+                ],
+              ),
+            );
+          }
           return SliverToBoxAdapter(
             child: SearchResultWidget(products: controller.searchProducts),
           );
