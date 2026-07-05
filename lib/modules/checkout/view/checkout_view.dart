@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/controller/checkout_controller.dart';
+import 'package:flutter_ecommerce_app/modules/checkout/widget/bottom_navigation_bar_total_widget.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/widget/checkout_items_widget.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/widget/checkout_address_widget.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/widget/checkout_payment_widget.dart';
@@ -27,6 +28,7 @@ class CheckoutView extends GetView<CheckoutController> {
           child: _buildBody(),
         ),
       ),
+      bottomNavigationBar: BottomNavigationBarTotalWidget(),
     );
   }
 
