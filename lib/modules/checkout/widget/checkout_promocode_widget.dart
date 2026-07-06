@@ -63,7 +63,18 @@ class CheckoutPromoCodeWidget extends GetView<CheckoutController> {
               ),
               SizedBox(width: 8),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Future.delayed(const Duration(milliseconds: 1000), () {
+                    Get.closeCurrentSnackbar();
+                  });
+                  Get.snackbar(
+                    'Coming Soon',
+                    'Share product feature is coming soon!',
+                    backgroundColor: AppTheme.primary,
+                    colorText: Colors.white,
+                    snackPosition: SnackPosition.BOTTOM,
+                  );
+                },
                 child: Text(
                   'Apply',
                   style: TextStyle(

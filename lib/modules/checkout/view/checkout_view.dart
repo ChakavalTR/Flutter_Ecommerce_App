@@ -4,6 +4,7 @@ import 'package:flutter_ecommerce_app/modules/checkout/widget/bottom_navigation_
 import 'package:flutter_ecommerce_app/modules/checkout/widget/checkout_items_widget.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/widget/checkout_address_widget.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/widget/checkout_payment_widget.dart';
+import 'package:flutter_ecommerce_app/modules/checkout/widget/checkout_price_summary_widget.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/widget/checkout_promocode_widget.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/widget/checkout_shipping_widget.dart';
 import 'package:get/get.dart';
@@ -24,7 +25,7 @@ class CheckoutView extends GetView<CheckoutController> {
           physics: BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics(),
           ),
-          padding: EdgeInsets.only(bottom: 50),
+          padding: EdgeInsets.only(bottom: 40),
           child: _buildBody(),
         ),
       ),
@@ -59,7 +60,9 @@ class CheckoutView extends GetView<CheckoutController> {
           //! Shipping Fee Section
           SizedBox(height: 10),
           CheckoutShippingWidget(),
-
+          //! Price Summary Section
+          SizedBox(height: 10),
+          CheckoutPriceSummaryWidget(),
           //! Payment Method Section
           SizedBox(height: 10),
           CheckoutPaymentWidget(),

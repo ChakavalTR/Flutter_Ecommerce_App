@@ -10,6 +10,7 @@ class CheckoutController extends GetxController {
     'assets/icons/visa_icon.png',
     'assets/icons/mastercard_icon.png',
   ];
+  final discount = 0.0.obs;
   //-------------------------------------------
   //* Lifecycle Section *\\
   @override
@@ -30,7 +31,29 @@ class CheckoutController extends GetxController {
     selectedPaymentMethod.value = index;
   }
 
+  //------------------------------------------
+  //* Calculated Properties Section *\\
+  //! Subtotal
+  double get subTotal {
+    double total = 0;
+    for (final item in checkoutItems) {
+      total += item.product.price * item.quantity.value;
+    }
+    return total;
+  }
+
+  //! Shipping Fee
   double get shippingFee {
     return selectedShipping.value == 0 ? 0 : 9.99;
+  }
+
+  //! Discount
+  double get discountAmount {
+    return discount.value;
+  }
+
+  //! Total
+  double get total {
+    return subTotal + shippingFee - discountAmount;
   }
 }
