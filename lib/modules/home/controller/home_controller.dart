@@ -51,6 +51,7 @@ class HomeController extends GetxController {
     currentBanner.value = pageIndex % bannerImages.length;
     fetchProducts();
     startFlashSaleCountdown();
+    // resetFlashSaleCountdown(); //! For Reseting
     autoScrollBanner();
     handleScroll();
   }
@@ -192,13 +193,13 @@ class HomeController extends GetxController {
   }
 
   //! Flash Countdown reset (for testing)
-  // Future<void> resetFlashSaleCountdown() async {
-  //   final key = 'flash_sale_end_time';
-  //   await LocalServiceStorage.instance.remove(key);
-  //   flashSaleDuration.value = Duration.zero;
-  //   isFlashSaleEnded.value = true;
-  //   await startFlashSaleCountdown();
-  // }
+  Future<void> resetFlashSaleCountdown() async {
+    final key = 'flash_sale_end_time';
+    await LocalServiceStorage.instance.remove(key);
+    flashSaleDuration.value = Duration.zero;
+    isFlashSaleEnded.value = true;
+    await startFlashSaleCountdown();
+  }
 
   //! Refresh Products
   Future<void> refreshHome() async {
