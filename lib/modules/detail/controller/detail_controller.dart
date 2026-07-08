@@ -163,14 +163,29 @@ class DetailController extends GetxController {
       product = args;
       return;
     }
-    product = args['product'];
-    final colorIndex = colorsOption.indexOf(args['color']);
-    if (colorIndex >= 0) {
-      selectedColors.value = colorIndex;
+    if (args is Map) {
+      product = args['product'] as ProductModel;
+      final selectedColorValue = args['color'];
+      final selectedStorageValue = args['storage'];
+      final selectedQuantityValue = args['quantity'];
+      if (selectedColorValue != null) {
+        final colorIndex = colorsOption.indexOf(selectedColorValue);
+        if (colorIndex != -1) {
+          selectedColors.value = colorIndex;
+        }
+      }
+      if (selectedStorageValue != null) {
+        final storageIndex = storagesOption.indexOf(selectedStorageValue);
+        if (storageIndex != -1) {
+          selectedStorage.value = storageIndex;
+        }
+      }
+      if (selectedQuantityValue != null) {
+        quantity.value = selectedQuantityValue;
+        qtyController.text = quantity.value.toString();
+      }
+      return;
     }
-    final storageIndex = storagesOption.indexOf(args['storage']);
-    if (storageIndex >= 0) {
-      selectedStorage.value = storageIndex;
-    }
+    Get.back();
   }
 }

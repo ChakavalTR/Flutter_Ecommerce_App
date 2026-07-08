@@ -60,9 +60,11 @@ class CheckoutView extends GetView<CheckoutController> {
           //! Shipping Fee Section
           SizedBox(height: 10),
           CheckoutShippingWidget(),
+
           //! Price Summary Section
           SizedBox(height: 10),
           CheckoutPriceSummaryWidget(),
+
           //! Payment Method Section
           SizedBox(height: 10),
           CheckoutPaymentWidget(),

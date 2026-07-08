@@ -10,11 +10,7 @@ class AddEditAddressView extends GetView<CheckoutController> {
   @override
   Widget build(BuildContext context) {
     final ShippingAddressModel? editAddress = Get.arguments;
-    if (editAddress != null) {
-      controller.fillAddressForm(editAddress);
-    } else {
-      controller.clearShippingAddressForm();
-    }
+    controller.prepareAddressForm(editAddress);
     return Scaffold(
       appBar: _buildAppBar(editAddress),
       body: GestureDetector(

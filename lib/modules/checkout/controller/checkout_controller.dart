@@ -28,6 +28,7 @@ class CheckoutController extends GetxController {
   final countryController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   final String shippingAddressKey = 'shipping_address_key';
+  bool isAddressFormPrepare = false;
   //-------------------------------------------
   //* Lifecycle Section *\\
   @override
@@ -113,6 +114,7 @@ class CheckoutController extends GetxController {
     }
     saveShippingAddressToLocalStorage();
     clearShippingAddressForm();
+    resetAddressFormPrepare();
     Get.back();
     Get.snackbar(
       'Success',
@@ -182,6 +184,22 @@ class CheckoutController extends GetxController {
     if (defaultIndex != -1) {
       selectedAddressIndex.value = defaultIndex;
     }
+  }
+
+  //! Prepare Address Form
+  void prepareAddressForm(ShippingAddressModel? editAddress) {
+    if (isAddressFormPrepare) return;
+    if (editAddress != null) {
+      fillAddressForm(editAddress);
+    } else {
+      clearShippingAddressForm();
+    }
+    isAddressFormPrepare = true;
+  }
+
+  //! Reset Address Form Preparation
+  void resetAddressFormPrepare() {
+    isAddressFormPrepare = false;
   }
 
   //------------------------------------------

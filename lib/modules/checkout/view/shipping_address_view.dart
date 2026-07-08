@@ -25,6 +25,7 @@ class ShippingAddressView extends GetView<CheckoutController> {
         IconButton(
           icon: Icon(Icons.add, size: 30),
           onPressed: () {
+            controller.resetAddressFormPrepare();
             RouteView.addEditAddress.go();
           },
         ),

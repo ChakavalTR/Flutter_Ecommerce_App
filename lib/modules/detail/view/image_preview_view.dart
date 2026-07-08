@@ -27,6 +27,10 @@ class ImagePreviewView extends GetView<DetailController> {
                     child: InteractiveViewer(
                       minScale: 1,
                       maxScale: 5,
+                      panEnabled: true,
+                      scaleEnabled: true,
+                      boundaryMargin: EdgeInsets.all(100),
+                      clipBehavior: Clip.none,
                       child: CachedNetworkImage(
                         imageUrl: image,
                         fit: BoxFit.contain,

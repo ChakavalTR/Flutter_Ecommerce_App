@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce_app/config/routes/app_pages.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
 import 'package:get/get.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/controller/checkout_controller.dart';
@@ -42,103 +43,116 @@ class CheckoutItemsWidget extends GetView<CheckoutController> {
               return Column(
                 spacing: 5,
                 children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 90,
-                        height: 90,
-                        child: CachedNetworkImage(
-                          imageUrl: item.product.image,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => Container(
-                            width: 90,
-                            height: 90,
-                            color: Colors.grey[300],
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation(
-                                  AppTheme.primary,
-                                ),
-                              ),
-                            ),
-                          ),
-                          errorWidget: (context, url, error) => Container(
-                            width: 90,
-                            height: 90,
-                            color: Colors.grey[300],
-                            child: Icon(Icons.error, color: Colors.red),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item.product.title,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 30,
-                                  height: 14,
-                                  decoration: BoxDecoration(
-                                    color: item.color,
-                                    shape: BoxShape.rectangle,
-                                    border: Border.all(color: Colors.grey),
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      RouteView.detail.go(
+                        arguments: {
+                          'product': item.product,
+                          'color': item.color,
+                          'storage': item.selectedStorage,
+                          'quantity': item.quantity.value,
+                        },
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 90,
+                          height: 90,
+                          child: CachedNetworkImage(
+                            imageUrl: item.product.image,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Container(
+                              width: 90,
+                              height: 90,
+                              color: Colors.grey[300],
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation(
+                                    AppTheme.primary,
                                   ),
                                 ),
-                                if (item.selectedStorage != null) ...[
-                                  SizedBox(width: 8),
-                                  Text(
-                                    item.selectedStorage!,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Container(
+                              width: 90,
+                              height: 90,
+                              color: Colors.grey[300],
+                              child: Icon(Icons.error, color: Colors.red),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item.product.title,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 30,
+                                    height: 14,
+                                    decoration: BoxDecoration(
+                                      color: item.color,
+                                      shape: BoxShape.rectangle,
+                                      border: Border.all(color: Colors.grey),
                                     ),
                                   ),
+                                  if (item.selectedStorage != null) ...[
+                                    SizedBox(width: 8),
+                                    Text(
+                                      item.selectedStorage!,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
                                 ],
-                              ],
-                            ),
-                            Text(
-                              NumberFormat.currency(
-                                symbol: '\$',
-                                decimalDigits: 2,
-                              ).format(item.product.price),
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: AppTheme.success,
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: 55,
-                        height: 36,
-                        margin: EdgeInsets.only(right: 10),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.grey.shade200),
-                        ),
-                        child: Text(
-                          'x${item.quantity.value}',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
+                              Text(
+                                NumberFormat.currency(
+                                  symbol: '\$',
+                                  decimalDigits: 2,
+                                ).format(item.product.price),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.success,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    ],
+                        Container(
+                          width: 55,
+                          height: 36,
+                          margin: EdgeInsets.only(right: 10),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey.shade200),
+                          ),
+                          child: Text(
+                            'x${item.quantity.value}',
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   if (index != items.length - 1)
                     Divider(

@@ -14,7 +14,6 @@ class CheckoutAddressWidget extends GetView<CheckoutController> {
 
       return Container(
         width: double.infinity,
-        height: 120,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),
@@ -28,17 +27,16 @@ class CheckoutAddressWidget extends GetView<CheckoutController> {
           ],
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: 50,
               height: 50,
-              margin: const EdgeInsets.only(left: 10, right: 5, top: 10),
+              margin: const EdgeInsets.only(left: 10, right: 5),
               decoration: BoxDecoration(
                 color: AppTheme.primary.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(Icons.location_on, color: AppTheme.primary, size: 30),
+              child: Icon(Icons.location_on, color: AppTheme.primary, size: 35),
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -95,7 +93,7 @@ class CheckoutAddressWidget extends GetView<CheckoutController> {
                         ),
                         Text(
                           '${address.address}, ${address.city}',
-                          maxLines: 1,
+                          maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontSize: 14,
@@ -116,22 +114,18 @@ class CheckoutAddressWidget extends GetView<CheckoutController> {
                       ],
                     ),
             ),
-
-            Align(
-              alignment: Alignment.center,
-              child: TextButton(
-                onPressed: () {
-                  address == null
-                      ? RouteView.addEditAddress.go()
-                      : RouteView.shippingAddress.go();
-                },
-                child: Text(
-                  address == null ? 'Add' : 'Change',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.primary,
-                  ),
+            TextButton(
+              onPressed: () {
+                address == null
+                    ? RouteView.addEditAddress.go()
+                    : RouteView.shippingAddress.go();
+              },
+              child: Text(
+                address == null ? 'Add' : 'Change',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.primary,
                 ),
               ),
             ),

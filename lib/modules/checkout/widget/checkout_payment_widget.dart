@@ -121,6 +121,14 @@ class CheckoutPaymentWidget extends GetView<CheckoutController> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                      Spacer(),
+                      Icon(
+                        Icons.delivery_dining_outlined,
+                        size: 30,
+                        color: controller.selectedPaymentMethod.value == 1
+                            ? AppTheme.primary
+                            : Colors.grey,
+                      ),
                     ],
                   ),
                 ),
