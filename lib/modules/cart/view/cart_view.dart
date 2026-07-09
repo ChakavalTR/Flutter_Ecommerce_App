@@ -341,7 +341,6 @@ class CartView extends GetView<CartController> {
                                               behavior:
                                                   HitTestBehavior.translucent,
                                               child: Container(
-                                                width: 120,
                                                 height: 40,
                                                 margin: const EdgeInsets.only(
                                                   right: 10,

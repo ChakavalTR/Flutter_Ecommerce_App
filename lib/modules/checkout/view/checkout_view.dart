@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce_app/modules/cart/controller/cart_controller.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/controller/checkout_controller.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/widget/bottom_navigation_bar_total_widget.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/widget/checkout_items_widget.dart';
@@ -10,8 +11,8 @@ import 'package:flutter_ecommerce_app/modules/checkout/widget/checkout_shipping_
 import 'package:get/get.dart';
 
 class CheckoutView extends GetView<CheckoutController> {
-  const CheckoutView({super.key});
-
+  CheckoutView({super.key});
+  final cartController = Get.find<CartController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +56,20 @@ class CheckoutView extends GetView<CheckoutController> {
 
           //! Item Method Section
           SizedBox(height: 10),
-          CheckoutItemsWidget(),
+          NotificationListener<ScrollUpdateNotification>(
+            onNotification: (notification) {
+              if ((notification.scrollDelta ?? 0).abs() > 3) {
+                cartController.closeEditingQuantity();
+              }
+              return false;
+            },
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
+              child: CheckoutItemsWidget(),
+            ),
+          ),
 
           //! Shipping Fee Section
           SizedBox(height: 10),

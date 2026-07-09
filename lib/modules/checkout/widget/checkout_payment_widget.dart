@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce_app/config/routes/app_pages.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/controller/checkout_controller.dart';
 import 'package:get/get.dart';
@@ -28,16 +29,15 @@ class CheckoutPaymentWidget extends GetView<CheckoutController> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 8.0, top: 8.0),
+              padding: EdgeInsets.only(left: 8.0, top: 8.0),
               child: Text(
                 'Payment Method',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
+
             GestureDetector(
-              onTap: () {
-                controller.selectedPaymentMethod.value = 0;
-              },
+              onTap: controller.toggleCardDropDown,
               child: Container(
                 width: double.infinity,
                 height: 55,
@@ -54,7 +54,7 @@ class CheckoutPaymentWidget extends GetView<CheckoutController> {
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
                   child: Row(
                     children: [
                       Icon(Icons.credit_card, size: 28, color: Colors.blue),
@@ -84,15 +84,108 @@ class CheckoutPaymentWidget extends GetView<CheckoutController> {
                           ),
                         );
                       }),
+                      Icon(
+                        controller.isCardDropDownOpen.value
+                            ? Icons.keyboard_arrow_up
+                            : Icons.keyboard_arrow_down,
+                        color: Colors.grey,
+                      ),
                     ],
                   ),
                 ),
               ),
             ),
+
+            if (controller.isCardDropDownOpen.value) ...[
+              ...List.generate(controller.savedCards.length, (index) {
+                final card = controller.savedCards[index];
+                return GestureDetector(
+                  onTap: () => controller.selectSavedCard(index),
+                  child: Container(
+                    height: 50,
+                    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: controller.selectedCardIndex.value == index
+                          ? AppTheme.primary.withOpacity(0.1)
+                          : Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: controller.selectedCardIndex.value == index
+                            ? AppTheme.primary
+                            : Colors.grey.shade300,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          controller.selectedCardIndex.value == index
+                              ? Icons.check_circle
+                              : Icons.radio_button_unchecked,
+                          color: controller.selectedCardIndex.value == index
+                              ? AppTheme.primary
+                              : Colors.grey,
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          card['number']!,
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Spacer(),
+                        Image.asset(card['image']!, width: 38, height: 28),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+              GestureDetector(
+                onTap: () {},
+                child: Container(
+                  height: 50,
+                  margin: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.grey.shade400),
+                        ),
+                        child: Icon(Icons.add),
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        'Add New Card',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Icon(Icons.credit_card, color: Colors.grey),
+                      Spacer(),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16,
+                        color: Colors.grey,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+
             GestureDetector(
-              onTap: () {
-                controller.selectedPaymentMethod.value = 1;
-              },
+              onTap: controller.selectCashOnDelivery,
               child: Container(
                 width: double.infinity,
                 height: 55,
@@ -109,7 +202,7 @@ class CheckoutPaymentWidget extends GetView<CheckoutController> {
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
                   child: Row(
                     children: [
                       Icon(Icons.local_atm, size: 28, color: Colors.green),

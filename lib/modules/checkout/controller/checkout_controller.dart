@@ -29,6 +29,15 @@ class CheckoutController extends GetxController {
   final formKey = GlobalKey<FormState>();
   final String shippingAddressKey = 'shipping_address_key';
   bool isAddressFormPrepare = false;
+  final isCardDropDownOpen = false.obs;
+  final selectedCardIndex = (-1).obs;
+  final savedCards = [
+    {
+      'number': '**** **** **** 5140',
+      'image': 'assets/icons/mastercard_icon.png',
+    },
+    {'number': '**** **** **** 6306', 'image': 'assets/icons/visa_icon.png'},
+  ].obs;
   //-------------------------------------------
   //* Lifecycle Section *\\
   @override
@@ -59,7 +68,59 @@ class CheckoutController extends GetxController {
   //! Select Payment Method
   void selectPaymentMethod(int index) {
     selectedPaymentMethod.value = index;
+    if (index != 0) {
+      isCardDropDownOpen.value = false;
+    }
   }
+
+  //! Toggle Credit/Debit Card
+  void toggleCardDropDown() {
+    selectedPaymentMethod.value = 0;
+    isCardDropDownOpen.value = !isCardDropDownOpen.value;
+  }
+
+  //! Select Saved Card
+  void selectSavedCard(int index) {
+    selectedPaymentMethod.value = 0;
+    selectedCardIndex.value = index;
+    isCardDropDownOpen.value = true;
+  }
+
+  //! Select Cash On Delivery
+  void selectCashOnDelivery() {
+    selectedPaymentMethod.value = 1;
+    selectedCardIndex.value = -1;
+    isCardDropDownOpen.value = false;
+  }
+
+  // //! Apply Promo Code
+  // void applyPromoCode(String code) {
+  //   if (code.trim().toLowerCase() == 'flutter10') {
+  //     discount.value = subTotal * 0.1;
+  //     Get.snackbar(
+  //       'Success',
+  //       'Promo code applied successfully',
+  //       snackPosition: SnackPosition.BOTTOM,
+  //       backgroundColor: Colors.green,
+  //       colorText: Colors.white,
+  //     );
+  //     Future.delayed(Duration(milliseconds: 1000), () {
+  //       Get.closeCurrentSnackbar();
+  //     });
+  //   } else {
+  //     discount.value = 0;
+  //     Get.snackbar(
+  //       'Error',
+  //       'Invalid promo code',
+  //       snackPosition: SnackPosition.BOTTOM,
+  //       backgroundColor: Colors.red,
+  //       colorText: Colors.white,
+  //     );
+  //     Future.delayed(Duration(milliseconds: 1000), () {
+  //       Get.closeCurrentSnackbar();
+  //     });
+  //   }
+  // }
 
   //! Fill Shipping Address
   void fillAddressForm(ShippingAddressModel address) {

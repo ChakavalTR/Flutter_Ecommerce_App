@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/config/routes/app_pages.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
+import 'package:flutter_ecommerce_app/modules/cart/controller/cart_controller.dart';
 import 'package:get/get.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/controller/checkout_controller.dart';
 import 'package:intl/intl.dart';
@@ -12,6 +13,7 @@ class CheckoutItemsWidget extends GetView<CheckoutController> {
   @override
   Widget build(BuildContext context) {
     final items = controller.checkoutItems;
+    final cartController = Get.find<CartController>();
     return Container(
       width: double.infinity,
       padding: EdgeInsets.only(bottom: 10),
@@ -133,30 +135,92 @@ class CheckoutItemsWidget extends GetView<CheckoutController> {
                             ],
                           ),
                         ),
-                        Container(
-                          width: 55,
-                          height: 36,
-                          margin: EdgeInsets.only(right: 10),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.grey.shade200),
-                          ),
-                          child: Text(
-                            'x${item.quantity.value}',
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
+                        Obx(() {
+                          if (!item.isEditingQty.value) {
+                            return GestureDetector(
+                              onTap: () {
+                                cartController.closeEditingQuantity();
+                                item.isEditingQty.value = true;
+                              },
+                              child: Container(
+                                width: 55,
+                                height: 36,
+                                margin: EdgeInsets.only(right: 10),
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Colors.grey.shade200,
+                                  ),
+                                ),
+                                child: Text(
+                                  'x${item.quantity.value}',
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          return Container(
+                            width: 120,
+                            height: 40,
+                            margin: const EdgeInsets.only(right: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(color: Colors.grey.shade200),
                             ),
-                          ),
-                        ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    if (item.quantity.value > 1) {
+                                      cartController.decreaseQuantityByCartItem(
+                                        item,
+                                      );
+                                    }
+                                  },
+                                  icon: Icon(
+                                    Icons.remove,
+                                    color: item.quantity.value > 1
+                                        ? Colors.red
+                                        : Colors.grey,
+                                    size: 22,
+                                  ),
+                                ),
+                                Text(
+                                  '${item.quantity.value}',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    cartController.increaseQuantityByCartItem(
+                                      item,
+                                    );
+                                  },
+                                  icon: Icon(
+                                    Icons.add,
+                                    color: Colors.green,
+                                    size: 22,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }),
                       ],
                     ),
                   ),
                   if (index != items.length - 1)
                     Divider(
-                      height: 1,
+                      height: 16,
                       thickness: 1,
                       indent: 16,
                       endIndent: 16,
