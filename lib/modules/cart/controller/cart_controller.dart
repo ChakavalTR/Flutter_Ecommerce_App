@@ -83,17 +83,22 @@ class CartController extends GetxController {
 
   //! Increase Quantity by Cart Item
   void increaseQuantityByCartItem(CartModel item) {
+    item.quantity.value++;
     final index = findCartItem(item);
-    if (index == -1) return;
-    increaseQuantity(index);
+    if (index != -1 && cartItems[index] != item) {
+      cartItems[index].quantity.value = item.quantity.value;
+    }
     saveCart();
   }
 
   //! Decrease Quantity by Cart Item
   void decreaseQuantityByCartItem(CartModel item) {
+    if (item.quantity.value <= 1) return;
+    item.quantity.value--;
     final index = findCartItem(item);
-    if (index == -1) return;
-    decreaseQuantity(index);
+    if (index != -1 && cartItems[index] != item) {
+      cartItems[index].quantity.value = item.quantity.value;
+    }
     saveCart();
   }
 

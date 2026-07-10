@@ -43,17 +43,19 @@ class CheckoutPriceSummaryWidget extends GetView<CheckoutController> {
                 ),
               ),
               Spacer(),
-              Text(
-                NumberFormat.currency(
-                  symbol: '\$',
-                  decimalDigits: 2,
-                ).format(controller.subTotal),
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey.shade700,
-                ),
-              ),
+              Obx(() {
+                return Text(
+                  NumberFormat.currency(
+                    symbol: '\$',
+                    decimalDigits: 2,
+                  ).format(controller.subTotal),
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey.shade700,
+                  ),
+                );
+              }),
             ],
           ),
           Row(

@@ -1,6 +1,8 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
+import 'package:flutter_ecommerce_app/config/routes/app_pages.dart';
 import 'package:flutter_ecommerce_app/modules/cart/controller/cart_controller.dart';
+import 'package:flutter_ecommerce_app/modules/cart/model/cart_model.dart';
 import 'package:flutter_ecommerce_app/modules/detail/controller/detail_controller.dart';
 import 'package:get/get.dart';
 
@@ -57,7 +59,20 @@ class BottomnavigationBarWidget extends GetView<DetailController> {
               child: SizedBox(
                 height: 55,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    final checkoutItems = CartModel(
+                      product: detailController.product,
+                      color: detailController
+                          .colorsOption[detailController.selectedColors.value],
+                      selectedStorage: detailController.showStorage
+                          ? detailController.storagesOption[detailController
+                                .selectedStorage
+                                .value]
+                          : null,
+                      quantity: detailController.quantity.value,
+                    );
+                    RouteView.checkout.go(arguments: [checkoutItems]);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.amber[600],
                     shape: RoundedRectangleBorder(

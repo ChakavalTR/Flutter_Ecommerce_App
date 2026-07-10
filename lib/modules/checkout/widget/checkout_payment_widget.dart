@@ -157,9 +157,13 @@ class CheckoutPaymentWidget extends GetView<CheckoutController> {
                         height: 30,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.grey.shade400),
+                          border: Border.all(color: AppTheme.primary),
                         ),
-                        child: Icon(Icons.add),
+                        child: Icon(
+                          Icons.add,
+                          color: AppTheme.primary,
+                          size: 26,
+                        ),
                       ),
                       SizedBox(width: 10),
                       Text(
@@ -170,7 +174,7 @@ class CheckoutPaymentWidget extends GetView<CheckoutController> {
                         ),
                       ),
                       SizedBox(width: 10),
-                      Icon(Icons.credit_card, color: Colors.grey),
+                      Icon(Icons.credit_card, color: Colors.blue),
                       Spacer(),
                       Icon(
                         Icons.arrow_forward_ios,

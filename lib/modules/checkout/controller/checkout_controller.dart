@@ -281,7 +281,7 @@ class CheckoutController extends GetxController {
 
   //! Discount
   double get discountAmount {
-    return discount.value;
+    return subTotal * (discount.value / 100);
   }
 
   //! Total
