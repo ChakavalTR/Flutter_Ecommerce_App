@@ -9,7 +9,10 @@ class AddEditAddressView extends GetView<CheckoutController> {
 
   @override
   Widget build(BuildContext context) {
-    final ShippingAddressModel? editAddress = Get.arguments;
+    final arguments = Get.arguments;
+    final ShippingAddressModel? editAddress = arguments is ShippingAddressModel
+        ? arguments
+        : null;
     controller.prepareAddressForm(editAddress);
     return Scaffold(
       appBar: _buildAppBar(editAddress),
@@ -78,6 +81,10 @@ class AddEditAddressView extends GetView<CheckoutController> {
                             borderRadius: BorderRadius.circular(14),
                             borderSide: BorderSide(color: AppTheme.primary),
                           ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: BorderSide(color: Colors.red),
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -121,6 +128,10 @@ class AddEditAddressView extends GetView<CheckoutController> {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(14),
                             borderSide: BorderSide(color: AppTheme.primary),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: BorderSide(color: Colors.red),
                           ),
                         ),
                         validator: (value) {
@@ -166,6 +177,10 @@ class AddEditAddressView extends GetView<CheckoutController> {
                             borderRadius: BorderRadius.circular(14),
                             borderSide: BorderSide(color: AppTheme.primary),
                           ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: BorderSide(color: Colors.red),
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -210,6 +225,10 @@ class AddEditAddressView extends GetView<CheckoutController> {
                             borderRadius: BorderRadius.circular(14),
                             borderSide: BorderSide(color: AppTheme.primary),
                           ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: BorderSide(color: Colors.red),
+                          ),
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -253,6 +272,10 @@ class AddEditAddressView extends GetView<CheckoutController> {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(14),
                             borderSide: BorderSide(color: AppTheme.primary),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: BorderSide(color: Colors.red),
                           ),
                         ),
                         validator: (value) {
@@ -325,6 +348,10 @@ class AddEditAddressView extends GetView<CheckoutController> {
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(14),
                             borderSide: BorderSide(color: AppTheme.primary),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(14),
+                            borderSide: BorderSide(color: Colors.red),
                           ),
                         ),
                         validator: (value) {

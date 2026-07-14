@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/controller/checkout_controller.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 
 class CheckoutPaymentWidget extends GetView<CheckoutController> {
@@ -98,50 +99,68 @@ class CheckoutPaymentWidget extends GetView<CheckoutController> {
             if (controller.isCardDropDownOpen.value) ...[
               ...List.generate(controller.savedCards.length, (index) {
                 final card = controller.savedCards[index];
-                return GestureDetector(
-                  onTap: () => controller.selectSavedCard(index),
-                  child: Container(
-                    height: 50,
-                    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                      color: controller.selectedCardIndex.value == index
-                          ? AppTheme.primary.withOpacity(0.1)
-                          : Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: controller.selectedCardIndex.value == index
-                            ? AppTheme.primary
-                            : Colors.grey.shade300,
+                return Slidable(
+                  key: ValueKey(card.id),
+                  endActionPane: ActionPane(
+                    motion: const DrawerMotion(),
+                    extentRatio: 0.45,
+                    children: [
+                      SlidableAction(
+                        onPressed: (_) {
+                          controller.deleteSavedCard(index);
+                        },
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        icon: Icons.delete,
+                        label: 'Delete',
                       ),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          controller.selectedCardIndex.value == index
-                              ? Icons.check_circle
-                              : Icons.radio_button_unchecked,
+                    ],
+                  ),
+                  child: GestureDetector(
+                    onTap: () => controller.selectSavedCard(index),
+                    child: Container(
+                      height: 50,
+                      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      decoration: BoxDecoration(
+                        color: controller.selectedCardIndex.value == index
+                            ? AppTheme.primary.withOpacity(0.1)
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
                           color: controller.selectedCardIndex.value == index
                               ? AppTheme.primary
-                              : Colors.grey,
+                              : Colors.grey.shade300,
                         ),
-                        SizedBox(width: 10),
-                        Text(
-                          card['number']!,
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            controller.selectedCardIndex.value == index
+                                ? Icons.check_circle
+                                : Icons.radio_button_unchecked,
+                            color: controller.selectedCardIndex.value == index
+                                ? AppTheme.primary
+                                : Colors.grey,
                           ),
-                        ),
-                        Spacer(),
-                        Image.asset(card['image']!, width: 38, height: 28),
-                      ],
+                          SizedBox(width: 10),
+                          Text(
+                            card.cardNumber,
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Spacer(),
+                          Image.asset(card.cardImage, width: 38, height: 28),
+                        ],
+                      ),
                     ),
                   ),
                 );
               }),
               GestureDetector(
-                onTap: () {},
+                onTap: controller.showAddCreditCardBottomSheet,
                 child: Container(
                   height: 50,
                   margin: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
