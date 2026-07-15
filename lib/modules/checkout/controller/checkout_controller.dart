@@ -155,6 +155,23 @@ class CheckoutController extends GetxController {
     });
   }
 
+  //! Remove Promo Code
+  void removePromoCode() {
+    discount.value = 0.0;
+    isPromoCodeApplied.value = false;
+    promoCodeController.clear();
+    Get.snackbar(
+      'Success',
+      'Promo code removed successfully',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.green,
+      colorText: Colors.white,
+    );
+    Future.delayed(Duration(milliseconds: 1000), () {
+      Get.closeCurrentSnackbar();
+    });
+  }
+
   //! Fill Shipping Address
   void fillAddressForm(ShippingAddressModel address) {
     fullNameController.text = address.fullName;
