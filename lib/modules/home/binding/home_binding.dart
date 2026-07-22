@@ -9,7 +9,11 @@ class HomeBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<HomeController>(() => HomeController());
     Get.lazyPut<CategoryController>(() => CategoryController());
-    Get.put(FavoriteController(), permanent: true);
-    Get.put(CartController(), permanent: true);
+    if (!Get.isRegistered<FavoriteController>()) {
+      Get.put(FavoriteController(), permanent: true);
+    }
+    if (!Get.isRegistered<CartController>()) {
+      Get.put(CartController(), permanent: true);
+    }
   }
 }

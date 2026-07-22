@@ -99,7 +99,7 @@ class CartBottomBarWidget extends GetView<CartController> {
                   RouteView.checkout.go(arguments: controller.selectedItems);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.warning,
+                  backgroundColor: AppTheme.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),

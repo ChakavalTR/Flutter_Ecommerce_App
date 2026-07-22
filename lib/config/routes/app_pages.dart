@@ -10,6 +10,7 @@ enum RouteView {
   checkout,
   shippingAddress,
   addEditAddress,
+  orderSuccess,
 }
 
 extension AppPages on RouteView {

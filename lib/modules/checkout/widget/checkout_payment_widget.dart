@@ -145,7 +145,7 @@ class CheckoutPaymentWidget extends GetView<CheckoutController> {
                           ),
                           SizedBox(width: 10),
                           Text(
-                            card.cardNumber,
+                            controller.maskCardNumber(card.cardNumber),
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,

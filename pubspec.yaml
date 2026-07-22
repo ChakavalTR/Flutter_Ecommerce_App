@@ -30,6 +30,8 @@ dependencies:
   intl: ^0.20.2
   flutter_slidable: ^4.0.3
   fluttertoast: ^9.1.0
+  credit_card_type_detector: ^3.0.0
+  confetti: ^0.8.0
 
 dev_dependencies:
   flutter_test:

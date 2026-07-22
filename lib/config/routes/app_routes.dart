@@ -11,7 +11,10 @@ import 'package:flutter_ecommerce_app/modules/checkout/view/checkout_view.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/view/shipping_address_view.dart';
 import 'package:flutter_ecommerce_app/modules/detail/binding/detail_binding.dart';
 import 'package:flutter_ecommerce_app/modules/detail/view/detail_view.dart';
+import 'package:flutter_ecommerce_app/modules/home/binding/home_binding.dart';
 import 'package:flutter_ecommerce_app/modules/home/view/home_view.dart';
+import 'package:flutter_ecommerce_app/modules/order/binding/order_binding.dart';
+import 'package:flutter_ecommerce_app/modules/order/view/order_success_view.dart';
 import 'package:flutter_ecommerce_app/modules/search/binding/search_binding.dart';
 import 'package:flutter_ecommerce_app/modules/search/view/search_view.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
@@ -24,7 +27,8 @@ class AppRouting {
         return GetPage(
           name: "/",
           page: () => HomeView(),
-          transition: Transition.noTransition,
+          binding: HomeBinding(),
+          transition: Transition.native,
         );
       case RouteView.search:
         return GetPage(
@@ -78,6 +82,13 @@ class AppRouting {
         return GetPage(
           name: "/${e.name}",
           page: () => AddEditAddressView(),
+          transition: Transition.native,
+        );
+      case RouteView.orderSuccess:
+        return GetPage(
+          name: "/${e.name}",
+          page: () => OrderSuccessView(),
+          binding: OrderBinding(),
           transition: Transition.native,
         );
     }

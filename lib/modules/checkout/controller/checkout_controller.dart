@@ -1,5 +1,5 @@
+// ignore_for_file: collection_methods_unrelated_type
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ecommerce_app/config/routes/app_pages.dart';
@@ -10,6 +10,8 @@ import 'package:flutter_ecommerce_app/modules/checkout/model/shipping_address_mo
 import 'package:flutter_ecommerce_app/modules/checkout/widget/card_name_holder_formatter_widget.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/widget/card_number_formatter_widget.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/widget/expiry_date_formatter_widget.dart';
+import 'package:flutter_ecommerce_app/modules/order/controller/order_controller.dart';
+import 'package:flutter_ecommerce_app/modules/order/model/order_model.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,7 +19,7 @@ class CheckoutController extends GetxController {
   //* Variables Section *\\
   late final List<CartModel> checkoutItems;
   final selectedShipping = 0.obs;
-  final selectedPaymentMethod = 0.obs;
+  final selectedPaymentMethod = (-1).obs;
   final List<String> creditCardImages = [
     'assets/icons/visa_icon.png',
     'assets/icons/mastercard_icon.png',
@@ -46,6 +48,9 @@ class CheckoutController extends GetxController {
   final creditCardFormKey = GlobalKey<FormState>();
   final promoCodeController = TextEditingController();
   final isPromoCodeApplied = false.obs;
+  final orderController = Get.find<OrderController>();
+  final isProcessingPayment = false.obs;
+  final detectedCardImage = RxnString();
   //-------------------------------------------
   //* Lifecycle Section *\\
   @override
@@ -103,6 +108,7 @@ class CheckoutController extends GetxController {
     if (index < 0 || index >= savedCards.length) return;
     selectedPaymentMethod.value = 0;
     selectedCardIndex.value = index;
+    isCardDropDownOpen.value = true;
   }
 
   //! Delete Saved Card
@@ -320,13 +326,23 @@ class CheckoutController extends GetxController {
     final cardNumber = cardNumberController.text.trim();
     final cardHolderName = cardHolderNameController.text.trim();
     final expiryDate = expiryDateController.text.trim();
+    final cardImage = getCardImage(cardNumber);
+    if (cardImage == null) {
+      showValidationSnackbar(
+        title: 'Unsupported Card',
+        message: 'Only Visa and Mastercard are supported',
+        icon: Icons.credit_card_off_outlined,
+      );
+      return;
+    }
     final card = CreditCardModel(
       id: DateTime.now().microsecondsSinceEpoch.toString(),
-      cardNumber: maskCardNumber(cardNumber),
+      cardNumber: cardNumber,
       cardHolder: cardHolderName,
       expiryDate: expiryDate,
-      cardImage: getCardImage(cardNumber),
+      cardImage: cardImage,
     );
+
     savedCards.add(card);
     selectedCardIndex.value = savedCards.length - 1;
     selectPaymentMethod(0);
@@ -346,25 +362,35 @@ class CheckoutController extends GetxController {
   }
 
   //! Card Image based on Card Number
-  String getCardImage(String cardNumber) {
-    final number = cardNumber.replaceAll(' ', '');
+  String? getCardImage(String cardNumber) {
+    final number = cardNumber.replaceAll(RegExp(r'\D'), '');
+    if (number.isEmpty) return null;
     if (number.startsWith('4')) {
       return 'assets/icons/visa_icon.png';
     }
-    if (number.startsWith('5')) {
-      return 'assets/icons/mastercard_icon.png';
+    if (number.length >= 2) {
+      final firstTwo = int.tryParse(number.substring(0, 2));
+      if (firstTwo != null && firstTwo >= 51 && firstTwo <= 55) {
+        return 'assets/icons/mastercard_icon.png';
+      }
     }
-    return 'assets/icons/visa_icon.png';
+    if (number.length >= 4) {
+      final firstFour = int.tryParse(number.substring(0, 4));
+      if (firstFour != null && firstFour >= 2221 && firstFour <= 2720) {
+        return 'assets/icons/mastercard_icon.png';
+      }
+    }
+    return null;
   }
 
   //! Mask The Card Number
   String maskCardNumber(String cardNumber) {
     final number = cardNumber.replaceAll(RegExp(r'\D'), '');
-    if (number.length < 4) {
-      return '**** **** ****';
+    if (number.length < 2) {
+      return '•••• •••• •••• ••';
     }
-    final last4 = number.substring(number.length - 4);
-    return '**** **** **** $last4';
+    final last2 = number.substring(number.length - 2);
+    return '•••• •••• •••• ••$last2';
   }
 
   //! Save Credit Cards to Local Storage
@@ -385,9 +411,7 @@ class CheckoutController extends GetxController {
           (card) => CreditCardModel.fromJson(Map<String, dynamic>.from(card)),
         )
         .toList();
-    if (savedCards.isNotEmpty) {
-      selectedCardIndex.value = 0;
-    }
+    selectedCardIndex.value = -1;
   }
 
   //! Clear Credit Card Form
@@ -396,6 +420,7 @@ class CheckoutController extends GetxController {
     cardHolderNameController.clear();
     expiryDateController.clear();
     cvvController.clear();
+    detectedCardImage.value = null;
   }
 
   //! Add Credit Card Bottom Sheet
@@ -522,7 +547,9 @@ class CheckoutController extends GetxController {
                           controller: cardNumberController,
                           keyboardType: TextInputType.number,
                           maxLength: 19,
-
+                          onChanged: (value) {
+                            detectedCardImage.value = getCardImage(value);
+                          },
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
                             CardnumberformatterWidget(),
@@ -530,6 +557,24 @@ class CheckoutController extends GetxController {
                           decoration: InputDecoration(
                             hintText: '0000 0000 0000 0000',
                             counterText: '',
+                            suffixIcon: Obx(() {
+                              final imagePath = detectedCardImage.value;
+                              if (imagePath == null) {
+                                return const Icon(
+                                  Icons.credit_card_outlined,
+                                  size: 26,
+                                );
+                              }
+                              return Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Image.asset(
+                                  imagePath,
+                                  width: 42,
+                                  height: 28,
+                                  fit: BoxFit.contain,
+                                ),
+                              );
+                            }),
                             contentPadding: EdgeInsets.symmetric(
                               horizontal: 14,
                             ),
@@ -549,11 +594,17 @@ class CheckoutController extends GetxController {
                             ),
                           ),
                           validator: (value) {
-                            final number = value?.replaceAll(' ', '') ?? '';
+                            final number =
+                                value?.replaceAll(RegExp(r'\D'), '') ?? '';
                             if (number.isEmpty) {
                               return 'Card number is required';
-                            } else if (!RegExp(r'^\d{16}$').hasMatch(number)) {
+                            }
+                            if (!RegExp(r'^\d{16}$').hasMatch(number)) {
                               return 'Card number must be 16 digits';
+                            }
+                            final cardType = getCardImage(number);
+                            if (cardType == null) {
+                              return 'Only Visa and Mastercard are supported';
                             }
                             return null;
                           },
@@ -748,6 +799,136 @@ class CheckoutController extends GetxController {
       isScrollControlled: true,
       ignoreSafeArea: true,
     );
+  }
+
+  //! Show Validation Snackbar
+  void showValidationSnackbar({
+    required String title,
+    required String message,
+    required IconData icon,
+  }) {
+    Get.snackbar(
+      title,
+      message,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+      icon: Icon(icon, color: Colors.white),
+    );
+    Future.delayed(Duration(milliseconds: 1000), () {
+      Get.closeCurrentSnackbar();
+    });
+  }
+
+  //! Validate Checkout
+  bool validateCheckout() {
+    FocusManager.instance.primaryFocus?.unfocus();
+    if (shippingAddress.isEmpty ||
+        selectedAddressIndex.value < 0 ||
+        selectedAddressIndex.value >= shippingAddress.length) {
+      showValidationSnackbar(
+        title: 'Shipping Address Required',
+        message: 'Please select a shipping address.',
+        icon: Icons.location_off_outlined,
+      );
+      return false;
+    }
+    if (selectedPaymentMethod.value == -1) {
+      showValidationSnackbar(
+        title: 'Payment Method Required',
+        message: 'Please select a payment method.',
+        icon: Icons.payment_outlined,
+      );
+      return false;
+    }
+    if (selectedPaymentMethod.value == 0) {
+      if (savedCards.isEmpty ||
+          selectedCardIndex.value < 0 ||
+          selectedCardIndex.value >= savedCards.length) {
+        showValidationSnackbar(
+          title: 'Credit/Debit Card Required',
+          message: 'Please select a saved card or add a new card.',
+          icon: Icons.credit_card_off_outlined,
+        );
+        return false;
+      }
+    }
+    return true;
+  }
+
+  //! Selected Payment Method Name
+  String get selectedPaymentMethodName {
+    if (selectedPaymentMethod.value == 0) {
+      return 'Credit/Debit Card';
+    }
+    if (selectedPaymentMethod.value == 1) {
+      return 'Cash On Delivery';
+    }
+    return '';
+  }
+
+  //! Generate Order Number
+  String generateOrderNumber() {
+    final timestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    return 'ORD-$timestamp';
+  }
+
+  //! Generate Order Model
+  OrderModel generateOrderModel() {
+    return OrderModel(
+      orderNumber: generateOrderNumber(),
+      orderDate: DateTime.now().toIso8601String(),
+      paymentMethod: selectedPaymentMethodName,
+      shippingAddress: shippingAddress[selectedAddressIndex.value],
+      orderItems: checkoutItems.map((item) {
+        return CartModel.fromJson(item.toJson());
+      }).toList(),
+      subTotal: subTotal,
+      shippingFee: shippingFee,
+      discount: discountAmount,
+      totalPaid: total,
+      status: 'Completed',
+    );
+  }
+
+  //! Fake Process Payment
+  Future<void> processPayment() async {
+    if (isProcessingPayment.value) return;
+    final isCheckoutValid = validateCheckout();
+    if (!isCheckoutValid) return;
+    try {
+      isProcessingPayment.value = true;
+      await Future.delayed(Duration(seconds: 3));
+      final order = generateOrderModel();
+      final isOrderSaved = await orderController.saveOrder(order);
+      if (!isOrderSaved) {
+        Get.snackbar(
+          'Order Failed',
+          'Unable to save your order. Please try again.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        Future.delayed(Duration(milliseconds: 1000), () {
+          Get.closeCurrentSnackbar();
+        });
+        return;
+      }
+      RouteView.orderSuccess.go(arguments: order);
+    } catch (error) {
+      Get.snackbar(
+        'Payment Failed',
+        'Something went wrong. Please try again.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      Future.delayed(Duration(milliseconds: 1000), () {
+        Get.closeCurrentSnackbar();
+      });
+    } finally {
+      isProcessingPayment.value = false;
+    }
   }
 
   //------------------------------------------

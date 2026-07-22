@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce_app/config/theme/app_theme.dart';
 import 'package:flutter_ecommerce_app/modules/checkout/controller/checkout_controller.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 
 class BottomNavigationBarTotalWidget extends GetView<CheckoutController> {
   const BottomNavigationBarTotalWidget({super.key});
@@ -61,40 +60,44 @@ class BottomNavigationBarTotalWidget extends GetView<CheckoutController> {
             SizedBox(
               height: 55,
               width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Pay ',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+              child: Obx(() {
+                final isProcessing = controller.isProcessingPayment.value;
+                return ElevatedButton(
+                  onPressed: isProcessing ? null : controller.processPayment,
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(double.infinity, 55),
+                    backgroundColor: isProcessing
+                        ? Colors.grey
+                        : AppTheme.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
                     ),
-                    Obx(
-                      () => Text(
-                        NumberFormat.currency(
-                          symbol: '\$',
-                          decimalDigits: 2,
-                        ).format(controller.total),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (isProcessing)
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2.0,
+                          ),
+                        ),
+                      if (isProcessing) SizedBox(width: 10),
+                      Text(
+                        isProcessing ? 'Processing...' : 'Pay Now',
                         style: TextStyle(
+                          color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                    Text(
-                      ' Now',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                    ],
+                  ),
+                );
+              }),
             ),
           ],
         ),
